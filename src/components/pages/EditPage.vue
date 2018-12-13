@@ -1,0 +1,281 @@
+<template>
+	<default-layout>
+		<section class="section">
+			<div class="container">
+
+				<!-- Loading Icon -->
+				<div v-if="loading">
+					<loader></loader>
+				</div>
+
+				<div v-show="loading === false">
+					<div class="title">Editing '{{ slug }}'</div>
+
+					<div class="tabs is-boxed">
+						<ul>
+							<li v-bind:class="{ 'is-active': view === 'edit' }">
+								<a @click="view = 'edit'">
+									<span class="icon is-small">
+										<font-awesome-icon :icon="['fa', 'edit']" />
+									</span>
+									<span>Editor</span>
+								</a>
+							</li>
+							<li v-bind:class="{ 'is-active': view === 'preview' }">
+								<a @click="view = 'preview'; getPreview();">
+									<span class="icon is-small">
+										<font-awesome-icon :icon="['fa', 'eye']" />
+									</span>
+									<span>Preview</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+
+					<div v-show="view === 'edit'">
+						<div id="editor" ref="editor"></div>
+					</div>
+
+					<div v-show="view === 'preview'">
+
+						<!-- Loading Icon -->
+						<div v-if="previewLoading">
+							<loader></loader>
+						</div>
+
+						<div v-else>
+							<div class="content" v-html="preview"></div>
+						</div>
+						<hr>
+
+					</div>
+
+					<br>
+
+					<div class="field">
+						<label class="label">Display Title</label>
+						<div class="control">
+							<input class="input" type="text" v-model="pageDisplayTitle" @change="dirty=true">
+						</div>
+					</div>
+
+					<div class="field">
+						<label class="label">Tags</label>
+
+						<div class="field is-grouped is-grouped-multiline">
+							<div class="control" v-for="tag in tagList" :key="tag">
+								<div class="tags has-addons">
+									<span class="tag is-dark">{{ tag }}</span>
+									<a class="tag is-delete" @click="removeTag(tag)"></a>
+								</div>
+							</div>
+						</div>
+
+						<div class="control has-icons-left">
+							<input class="input" type="text" v-model="tagInput" placeholder="Add Tag" @keyup.enter.prevent="addTag" @keydown.tab.prevent="addTag" @keydown.188.prevent="addTag">
+							<span class="icon is-small is-left">
+								<font-awesome-icon :icon="['fa', 'plus']" />
+							</span>
+						</div>
+					</div>
+
+					<br>
+
+					<button class="button is-success" @click="savePage">
+						<span class="icon">
+							<font-awesome-icon :icon="['fa', 'save']" />
+						</span>
+						<span>Save</span>
+					</button>
+
+					<button class="button is-warning" @click="cancelEdit">
+						<span class="icon">
+							<font-awesome-icon :icon="['fa', 'ban']" />
+						</span>
+						<span>Cancel</span>
+					</button>
+
+					<button class="button is-danger" @click="deletePage">
+						<span class="icon">
+							<font-awesome-icon :icon="['fa', 'trash']" />
+						</span>
+						<span>Delete</span>
+					</button>
+				</div>
+
+			</div>
+		</section>
+	</default-layout>
+</template>
+
+<script>
+	import DefaultLayout from '../layouts/default.vue'
+	import Loader from '../elements/Loader.vue'
+
+	export default {
+		name: 'EditPage',
+		props: ['slug'],
+		components: { DefaultLayout, Loader },
+		data () {
+			return {
+				editor: Object,
+				pageDisplayTitle: '',
+				tagInput: '',
+				tagList: [],
+				pageModifiedDate: undefined,
+				loading: true,
+				view: 'edit',
+				previewLoading: false,
+				preview: '',
+				dirty: false
+			}
+		},
+		computed: {
+			formattedDate () {
+				return this.$moment(this.pageModifiedDate).format('MMMM Do YYYY, h:mm a')
+			}
+		},
+		watch: {
+			slug () {
+				this.fetchPage()
+			}
+		},
+		mounted () {
+			this.editor = ace.edit(this.$refs['editor'])
+			this.editor.setTheme('ace/theme/textmate')
+			this.editor.getSession().setMode('ace/mode/markdown')
+			this.editor.getSession().setUseWrapMode(true)
+
+			this.editor.setOptions({
+				fontSize: '11pt',
+				scrollPastEnd: true
+			})
+
+			this.fetchPage()
+		},
+		created () {
+			window.document.title = 'Editing ' + this.slug
+		},
+		beforeRouteLeave (to, from , next) {
+			if (this.dirty) {
+				let answer = window.confirm('Do you really want to leave? Any unsaved changes will be lost.')
+				if (answer) {
+					next()
+				} else {
+					next(false)
+				}
+			} else {
+				next()
+			}
+			
+		},
+		methods: {
+
+			fetchPage () {
+				var vm = this
+				vm.loading = true
+				this.$axios.get('/api/pages/' + this.slug + '?format=source')
+					.then(function (response) {
+						vm.pageDisplayTitle = response.data.title
+						vm.tagList = response.data.tags
+						vm.editor.setValue(response.data.contents, -1)
+						vm.pageModifiedDate = new Date(response.data.modified)
+						vm.editor.on('change', () => {
+							vm.dirty = true
+						})
+						vm.loading = false
+					})
+					.catch(function (error) {
+						vm.pageDisplayTitle = ''
+						vm.pageTags = ''
+						vm.editor.setValue('', -1)
+						vm.pageModifiedDate = undefined
+						vm.loading = false
+						if (error.response) {
+							if (error.response.status !== 404) {
+								console.log(error.message)
+							}
+						}
+					})
+			}, // end fetchPage
+
+			savePage () {
+				let content = this.editor.getValue()
+				var vm = this
+
+				this.$axios.put('/api/pages/' + this.slug, {
+					title: this.pageDisplayTitle,
+					tags: this.tagList,
+					contents: content
+				})
+				.then(function (response) {
+					if (response.status === 200) {
+						vm.dirty = false
+						vm.$router.push({ path: `/pages/${vm.slug}` })
+					}
+				})
+				.catch(function (error) {
+					console.log(error.message)
+				})
+			}, // end savePage
+
+			cancelEdit () {
+				this.$router.push({ path: `/pages/${this.slug}` })
+			}, // end cancelEdit
+
+			deletePage () {
+				if (confirm('Are you sure you want to permanently delete this page?') === false) {
+					return
+				}
+				var vm = this
+
+				this.$axios.delete('/api/pages/' + this.slug)
+				.then(function (response) {
+					if (response.status === 200) {
+						vm.dirty = false
+						vm.$router.push({ path: `/` })
+					}
+				})
+				.catch(function (error) {
+					console.log(error.message)
+				})
+			}, // end deletePage
+
+			getPreview () {
+				let content = this.editor.getValue()
+				var vm = this
+				vm.preview = ''
+
+				vm.previewLoading = true
+				this.$axios.post('/api/preview', {
+					contents: content
+				})
+				.then(function (response) {
+					vm.previewLoading = false
+					vm.preview = response.data.contents
+				})
+				.catch(function (error) {
+					vm.previewLoading = false
+					console.log(error.message)
+				})
+			}, // end getPreview
+
+			addTag () {
+				let i = this.tagList.indexOf(this.tagInput)
+				if (i === -1 && this.tagInput !== '') {
+					this.tagList.push(this.tagInput)
+					this.dirty = true
+				}
+				this.tagInput = ''
+			},
+
+			removeTag (tag) {
+				let i = this.tagList.indexOf(tag)
+				if (i > -1) {
+					this.tagList.splice(i, 1);
+					this.dirty = true
+				}
+			}
+		}
+	}
+</script>

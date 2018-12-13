@@ -1,0 +1,40 @@
+.is-auto-x {
+	overflow-x: auto;
+}
+.is-auto-y {
+	overflow-y: auto;
+}
+
+.is-break-word {
+	word-break: break-word;
+}
+
+#editor {
+	height: calc(100vh * 0.5);
+	min-height: 400px;
+	border: 1px solid #b5b5b5;
+}
+
+.no-wrap {
+	white-space:nowrap;
+}
+
+.pagination ul, .pagination ol {
+	list-style: none;
+}
+
+/*
+	Margin utility classes
+*/
+.mb-0 {
+	margin-bottom: 0 !important;
+}
+.mt-0 {
+	margin-top: 0 !important;
+}
+.ml-0 {
+	margin-left: 0 !important;
+}
+.mr-0 {
+	margin-right: 0 !important;
+}
