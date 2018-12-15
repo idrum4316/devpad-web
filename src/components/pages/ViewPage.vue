@@ -1,124 +1,121 @@
 <template>
-	<default-layout>
-		<section class="section">
-			<div class="container">
+	<section class="section">
+		<div class="container">
 
-				<div v-if="loading">
-					<loader></loader>
+			<div v-if="loading">
+				<loader></loader>
+			</div>
+
+			<div v-else>
+				<div v-if="notFound === true">
+					<div class="col">
+						<create-new-message :slug="slug"></create-new-message>
+					</div>
 				</div>
 
-				<div v-else>
-					<div v-if="notFound === true">
-						<div class="col">
-							<create-new-message :slug="slug"></create-new-message>
+				<div class="columns" v-else>
+
+					<div class="column is-one-quarter is-hidden-mobile">
+						<span class="subtitle is-5 has-text-primary">Table of Contents</span>
+						<br><br>
+						<div class="toc-list">
+							<div class="toc-item" v-for="heading in pageWithTOC.toc" :class="'heading-' + heading.depth" :key="heading.index">
+								<a class="pointer" :href="'#toc_' + heading.index" :title="heading.title">
+									{{ heading.title }}
+								</a>
+							</div>
 						</div>
 					</div>
 
-					<div class="columns" v-else>
+					<div class="column is-auto-x is-break-word">
 
-						<div class="column is-one-quarter is-hidden-mobile">
-							<span class="subtitle is-5 has-text-primary">Table of Contents</span>
-							<br><br>
-							<div class="toc-list">
-								<div class="toc-item" v-for="heading in pageWithTOC.toc" :class="'heading-' + heading.depth" :key="heading.index">
-									<a class="pointer" :href="'#toc_' + heading.index" :title="heading.title">
-										{{ heading.title }}
-									</a>
-								</div>
+						<div class="columns is-vcentered is-mobile">
+							<div class="column">
+								<div class="title">{{ page.title }}</div>
 							</div>
-						</div>
 
-						<div class="column is-auto-x is-break-word">
+							<!-- Page Controls -->
+							<div class="column is-narrow">
+								<div class="dropdown is-right" ref="pageControls">
+									<div class="dropdown-trigger">
 
-							<div class="columns is-vcentered is-mobile">
-								<div class="column">
-									<div class="title">{{ page.title }}</div>
-								</div>
+										<!-- Button Group -->
+										<div class="buttons has-addons mb-0">
+											<!-- Edit Button -->
+											<router-link class="button mb-0" :to="{ name: 'EditPage', params: { slug: slug }}">
+												<span class="icon is-small">
+													<font-awesome-icon :icon="['fa', 'edit']" />
+												</span>
+												<span>Edit</span>
+											</router-link>
 
-								<!-- Page Controls -->
-								<div class="column is-narrow">
-									<div class="dropdown is-right" ref="pageControls">
-										<div class="dropdown-trigger">
-
-											<!-- Button Group -->
-											<div class="buttons has-addons mb-0">
-												<!-- Edit Button -->
-												<router-link class="button mb-0" :to="{ name: 'EditPage', params: { slug: slug }}">
-													<span class="icon is-small">
-														<font-awesome-icon :icon="['fa', 'edit']" />
-													</span>
-													<span>Edit</span>
-												</router-link>
-
-												<button class="button mb-0" aria-haspopup="true" aria-controls="page-controls-menu" @click="$refs.pageControls.classList.toggle('is-active')">
-													<span class="icon is-small">
-														<font-awesome-icon :icon="['fa', 'angle-down']" />
-													</span>
-												</button>
-											</div>
-											<!-- End Button Group -->
-
-											<div class="dropdown-menu" id="page-controls-menu" role="menu">
-												<div class="dropdown-content">
-													<a class="dropdown-item">
-														Move
-													</a>
-													<a class="dropdown-item" @click="deletePage">
-														Delete
-													</a>
-												</div>
-											</div>
-
+											<button class="button mb-0" aria-haspopup="true" aria-controls="page-controls-menu" @click="$refs.pageControls.classList.toggle('is-active')">
+												<span class="icon is-small">
+													<font-awesome-icon :icon="['fa', 'angle-down']" />
+												</span>
+											</button>
 										</div>
+										<!-- End Button Group -->
+
+										<div class="dropdown-menu" id="page-controls-menu" role="menu">
+											<div class="dropdown-content">
+												<a class="dropdown-item">
+													Move
+												</a>
+												<a class="dropdown-item" @click="deletePage">
+													Delete
+												</a>
+											</div>
+										</div>
+
 									</div>
 								</div>
-								<!-- End Page Controls -->
-
 							</div>
-
-							<!-- Page Meta Info -->
-							<div class="has-text-grey-light">
-
-								<!-- Updated Date -->
-								<div style="margin-bottom: .5rem;">
-									<font-awesome-icon :icon="['fa', 'calendar']" fixed-width />
-									Updated {{ formattedDate }}
-								</div>
-
-								<!-- Tags -->
-								<div style="margin-bottom: .5rem;" v-if="page.tags.length > 0">
-									<font-awesome-icon :icon="['fa', 'tags']" fixed-width />
-									<router-link v-for="tag in page.tags" :key="tag" :to="{ name: 'Search', query: { tag: tag }}">
-										<span class="tag is-info" style="margin-left: .5rem;">{{ tag }}</span>
-									</router-link>
-								</div>
-
-							</div>
-
-							<hr>
-
-							<!-- Page Content -->
-							<div class="content" v-html="pageWithTOC.page"></div>
+							<!-- End Page Controls -->
 
 						</div>
 
-					</div>
-				</div>
+						<!-- Page Meta Info -->
+						<div class="has-text-grey-light">
 
+							<!-- Updated Date -->
+							<div style="margin-bottom: .5rem;">
+								<font-awesome-icon :icon="['fa', 'calendar']" fixed-width />
+								Updated {{ formattedDate }}
+							</div>
+
+							<!-- Tags -->
+							<div style="margin-bottom: .5rem;" v-if="page.tags.length > 0">
+								<font-awesome-icon :icon="['fa', 'tags']" fixed-width />
+								<router-link v-for="tag in page.tags" :key="tag" :to="{ name: 'Search', query: { tag: tag }}">
+									<span class="tag is-info" style="margin-left: .5rem;">{{ tag }}</span>
+								</router-link>
+							</div>
+
+						</div>
+
+						<hr>
+
+						<!-- Page Content -->
+						<div class="content" v-html="pageWithTOC.page"></div>
+
+					</div>
+
+				</div>
 			</div>
-		</section>
-	</default-layout>
+
+		</div>
+	</section>
 </template>
 
 <script>
-	import DefaultLayout from '../layouts/default.vue'
 	import CreateNewMessage from '../elements/CreateNewMessage.vue'
 	import Loader from '../elements/Loader.vue'
 
 	export default {
 		name: 'ViewPage',
 		props: ['slug'],
-		components: { CreateNewMessage, DefaultLayout, Loader },
+		components: { CreateNewMessage, Loader },
 		data () {
 			return {
 				page: {

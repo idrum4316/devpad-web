@@ -1,121 +1,118 @@
 <template>
-	<default-layout>
-		<section class="section">
-			<div class="container">
+	<section class="section">
+		<div class="container">
 
-				<!-- Loading Icon -->
-				<div v-if="loading">
-					<loader></loader>
+			<!-- Loading Icon -->
+			<div v-if="loading">
+				<loader></loader>
+			</div>
+
+			<div v-show="loading === false">
+				<div class="title">Editing '{{ slug }}'</div>
+
+				<div class="tabs is-boxed">
+					<ul>
+						<li v-bind:class="{ 'is-active': view === 'edit' }">
+							<a @click="view = 'edit'">
+								<span class="icon is-small">
+									<font-awesome-icon :icon="['fa', 'edit']" />
+								</span>
+								<span>Editor</span>
+							</a>
+						</li>
+						<li v-bind:class="{ 'is-active': view === 'preview' }">
+							<a @click="view = 'preview'; getPreview();">
+								<span class="icon is-small">
+									<font-awesome-icon :icon="['fa', 'eye']" />
+								</span>
+								<span>Preview</span>
+							</a>
+						</li>
+					</ul>
 				</div>
 
-				<div v-show="loading === false">
-					<div class="title">Editing '{{ slug }}'</div>
+				<div v-show="view === 'edit'">
+					<div id="editor" ref="editor"></div>
+				</div>
 
-					<div class="tabs is-boxed">
-						<ul>
-							<li v-bind:class="{ 'is-active': view === 'edit' }">
-								<a @click="view = 'edit'">
-									<span class="icon is-small">
-										<font-awesome-icon :icon="['fa', 'edit']" />
-									</span>
-									<span>Editor</span>
-								</a>
-							</li>
-							<li v-bind:class="{ 'is-active': view === 'preview' }">
-								<a @click="view = 'preview'; getPreview();">
-									<span class="icon is-small">
-										<font-awesome-icon :icon="['fa', 'eye']" />
-									</span>
-									<span>Preview</span>
-								</a>
-							</li>
-						</ul>
+				<div v-show="view === 'preview'">
+
+					<!-- Loading Icon -->
+					<div v-if="previewLoading">
+						<loader></loader>
 					</div>
 
-					<div v-show="view === 'edit'">
-						<div id="editor" ref="editor"></div>
+					<div v-else>
+						<div class="content" v-html="preview"></div>
 					</div>
+					<hr>
 
-					<div v-show="view === 'preview'">
+				</div>
 
-						<!-- Loading Icon -->
-						<div v-if="previewLoading">
-							<loader></loader>
-						</div>
+				<br>
 
-						<div v-else>
-							<div class="content" v-html="preview"></div>
-						</div>
-						<hr>
-
+				<div class="field">
+					<label class="label">Display Title</label>
+					<div class="control">
+						<input class="input" type="text" v-model="pageDisplayTitle" @change="dirty=true">
 					</div>
+				</div>
 
-					<br>
+				<div class="field">
+					<label class="label">Tags</label>
 
-					<div class="field">
-						<label class="label">Display Title</label>
-						<div class="control">
-							<input class="input" type="text" v-model="pageDisplayTitle" @change="dirty=true">
-						</div>
-					</div>
-
-					<div class="field">
-						<label class="label">Tags</label>
-
-						<div class="field is-grouped is-grouped-multiline">
-							<div class="control" v-for="tag in tagList" :key="tag">
-								<div class="tags has-addons">
-									<span class="tag is-dark">{{ tag }}</span>
-									<a class="tag is-delete" @click="removeTag(tag)"></a>
-								</div>
+					<div class="field is-grouped is-grouped-multiline">
+						<div class="control" v-for="tag in tagList" :key="tag">
+							<div class="tags has-addons">
+								<span class="tag is-dark">{{ tag }}</span>
+								<a class="tag is-delete" @click="removeTag(tag)"></a>
 							</div>
 						</div>
-
-						<div class="control has-icons-left">
-							<input class="input" type="text" v-model="tagInput" placeholder="Add Tag" @keyup.enter.prevent="addTag" @keydown.tab.prevent="addTag" @keydown.188.prevent="addTag">
-							<span class="icon is-small is-left">
-								<font-awesome-icon :icon="['fa', 'plus']" />
-							</span>
-						</div>
 					</div>
 
-					<br>
-
-					<button class="button is-success" @click="savePage">
-						<span class="icon">
-							<font-awesome-icon :icon="['fa', 'save']" />
+					<div class="control has-icons-left">
+						<input class="input" type="text" v-model="tagInput" placeholder="Add Tag" @keyup.enter.prevent="addTag" @keydown.tab.prevent="addTag" @keydown.188.prevent="addTag">
+						<span class="icon is-small is-left">
+							<font-awesome-icon :icon="['fa', 'plus']" />
 						</span>
-						<span>Save</span>
-					</button>
-
-					<button class="button is-warning" @click="cancelEdit">
-						<span class="icon">
-							<font-awesome-icon :icon="['fa', 'ban']" />
-						</span>
-						<span>Cancel</span>
-					</button>
-
-					<button class="button is-danger" @click="deletePage">
-						<span class="icon">
-							<font-awesome-icon :icon="['fa', 'trash']" />
-						</span>
-						<span>Delete</span>
-					</button>
+					</div>
 				</div>
 
+				<br>
+
+				<button class="button is-success" @click="savePage">
+					<span class="icon">
+						<font-awesome-icon :icon="['fa', 'save']" />
+					</span>
+					<span>Save</span>
+				</button>
+
+				<button class="button is-warning" @click="cancelEdit">
+					<span class="icon">
+						<font-awesome-icon :icon="['fa', 'ban']" />
+					</span>
+					<span>Cancel</span>
+				</button>
+
+				<button class="button is-danger" @click="deletePage">
+					<span class="icon">
+						<font-awesome-icon :icon="['fa', 'trash']" />
+					</span>
+					<span>Delete</span>
+				</button>
 			</div>
-		</section>
-	</default-layout>
+
+		</div>
+	</section>
 </template>
 
 <script>
-	import DefaultLayout from '../layouts/default.vue'
 	import Loader from '../elements/Loader.vue'
 
 	export default {
 		name: 'EditPage',
 		props: ['slug'],
-		components: { DefaultLayout, Loader },
+		components: { Loader },
 		data () {
 			return {
 				editor: Object,

@@ -2,7 +2,7 @@
 	<div>
 
 		<top-nav></top-nav>
-		<slot></slot>
+		<router-view></router-view>
 		<bottom-footer></bottom-footer>
 
 	</div>

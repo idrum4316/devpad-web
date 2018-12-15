@@ -1,61 +1,58 @@
 <template>
-	<default-layout>
-		<div>
-			<section class="section">
-				<div class="container">
+	<div>
+		<section class="section">
+			<div class="container">
 
-					<div v-if="loading">
-						<loader></loader>
-					</div>
+				<div v-if="loading">
+					<loader></loader>
+				</div>
 
-					<div v-else class="columns">
-						<div class="column">
-							<div class="panel">
-								<div class="panel-heading">
-									Latest Pages
-								</div>
-								<div v-for="page in pages" :key="page.id">
-									<router-link :to="{ name: 'ViewPage', params: { slug: page.id } }" class="panel-block">
-										<span class="panel-icon">
-											<font-awesome-icon :icon="['fa', 'file']" fixed-width />
-										</span>
-										{{ page.fields.title || page.id }}
-									</router-link>
-								</div>
+				<div v-else class="columns">
+					<div class="column">
+						<div class="panel">
+							<div class="panel-heading">
+								Latest Pages
+							</div>
+							<div v-for="page in pages" :key="page.id">
+								<router-link :to="{ name: 'ViewPage', params: { slug: page.id } }" class="panel-block">
+									<span class="panel-icon">
+										<font-awesome-icon :icon="['fa', 'file']" fixed-width />
+									</span>
+									{{ page.fields.title || page.id }}
+								</router-link>
 							</div>
 						</div>
+					</div>
 
-						<div class="column">
-							<div class="panel">
-								<div class="panel-heading">
-									Popular Tags
-								</div>
-								<div v-if="tags.total > 0">
-									<div v-for="tag in tags.terms.slice(0, 10)" :key="tag.term">
-										<router-link :to="{ name: 'Search', query: { tag: tag.term } }" class="panel-block">
-											<span class="panel-icon">
-												<font-awesome-icon :icon="['fa', 'tag']" fixed-width />
-											</span>
-											{{ tag.term }}
-										</router-link>
-									</div>
+					<div class="column">
+						<div class="panel">
+							<div class="panel-heading">
+								Popular Tags
+							</div>
+							<div v-if="tags.total > 0">
+								<div v-for="tag in tags.terms.slice(0, 10)" :key="tag.term">
+									<router-link :to="{ name: 'Search', query: { tag: tag.term } }" class="panel-block">
+										<span class="panel-icon">
+											<font-awesome-icon :icon="['fa', 'tag']" fixed-width />
+										</span>
+										{{ tag.term }}
+									</router-link>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</section>
-		</div>
-	</default-layout>
+			</div>
+		</section>
+	</div>
 </template>
 
 <script>
-	import DefaultLayout from '../layouts/default.vue'
 	import Loader from '../elements/Loader.vue'
 
 	export default {
 		name: 'Home',
-		components: { DefaultLayout, Loader },
+		components: { Loader },
 		data () {
 			return {
 				loading: true,
