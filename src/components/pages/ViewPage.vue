@@ -81,7 +81,7 @@
 							<!-- Updated Date -->
 							<div style="margin-bottom: .5rem;">
 								<font-awesome-icon :icon="['fa', 'calendar']" fixed-width />
-								Updated {{ formattedDate }}
+								Modified {{ formattedDate }}
 							</div>
 
 							<!-- Tags -->
@@ -183,10 +183,10 @@
 				this.$axios.get('/api/pages/' + this.slug + '?format=html')
 					.then(function (response) {
 						vm.loading = false
-						vm.page.title = response.data.title
-						vm.page.tags = response.data.tags
+						vm.page.title = response.data.metadata.title
+						vm.page.tags = response.data.metadata.tags
 						vm.page.content = response.data.contents
-						vm.page.modified = new Date(response.data.modified)
+						vm.page.modified = new Date(response.data.metadata.modified)
 
 						if (vm.page.title === '') {
 							vm.page.title = vm.slug

@@ -31,7 +31,46 @@
 
 				<div class="columns" v-else>
 
+					<!-- Filters -->
 					<div class="column is-one-quarter is-hidden-mobile">
+
+						<!-- Sort Filter -->
+						<nav class="panel">
+							<p class="panel-heading">
+								Sort Order
+							</p>
+							<div class="panel-block">
+								<form @submit.prevent="" style="width: 100%;">
+
+									<!-- Sort Field -->
+									<div class="field">
+										<div class="control is-expanded">
+											<div class="select is-fullwidth">
+												<select v-model="query.sort.field" @change="query.page = 1; refresh()">
+													<option value="">Modified Date</option>
+													<option value="metadata.title">Title</option>
+												</select>
+											</div>
+										</div>
+									</div>
+
+									<!-- Sort Order -->
+									<div class="field">
+										<div class="control is-expanded">
+											<div class="select is-fullwidth">
+												<select v-model="query.sort.order" @change="query.page = 1; refresh()">
+													<option value="">Descending</option>
+													<option value="asc">Ascending</option>
+												</select>
+											</div>
+										</div>
+									</div>
+
+								</form>
+							</div>
+						</nav>
+
+						<!-- Tag Filter -->
 						<nav class="panel" v-if="facets.tags">
 							<p class="panel-heading">
 								Tag
@@ -47,7 +86,9 @@
 								</button>
 							</div>
 						</nav>
+
 					</div>
+					<!-- End Filters -->
 
 					<div class="column">
 						<div class="title">Results</div>
@@ -68,13 +109,18 @@
 						<div class="card" style="margin-bottom: 1rem;" v-for="hit in hits" :key="hit.id">
 							<div class="card-content">
 								<router-link class="subtitle is-5 has-text-primary" :to="{ name: 'ViewPage', params: { slug: hit.id }}">
-									<font-awesome-icon :icon="['fa', 'file-alt']" /> {{ hit.fields.title || hit.id }}
+									<font-awesome-icon :icon="['fa', 'file-alt']" /> {{ hit.fields['metadata.title'] || hit.id }}
 								</router-link>
 
 								<br>
 
-								<div v-if="hit.fragments">
-									<p v-if="hit.fragments.contents" v-for="fragment in hit.fragments.contents" v-html="fragment" :key="fragment.id"></p>
+								<div v-if="hit.fragments && hit.fragments.contents">
+									<p v-for="fragment in hit.fragments.contents" v-html="fragment" :key="fragment.id"></p>
+								</div>
+								<div v-else>
+									<p>
+										{{ hit.fields.contents | truncate }}
+									</p>
 								</div>
 
 								<br>
@@ -82,22 +128,28 @@
 								<!-- Page Meta Info -->
 								<div class="has-text-grey-light">
 									<!-- Tags -->
-									<font-awesome-icon :icon="['fa', 'tags']" fixed-width />
-									<span v-if="Array.isArray(hit.fields.tags)">
-										<router-link
-											v-for="tag in hit.fields.tags"
-											:key="tag"
-											:to="{ name: 'Search', query: { tag: tag }}">
-											<span class="tag is-info" style="margin-left: .5rem;">{{ tag }}</span>
-										</router-link>
-									</span>
-									<span v-else>
-										<router-link
-											v-if="hit.fields.tags"
-											:to="{ name: 'Search', query: { tag: hit.fields.tags }}">
-											<span class="tag is-info" style="margin-left: .5rem;">{{ hit.fields.tags }}</span>
-										</router-link>
-									</span>
+									<div>
+										<font-awesome-icon :icon="['fa', 'tags']" fixed-width />
+										<span v-if="Array.isArray(hit.fields['metadata.tags'])">
+											<router-link
+												v-for="tag in hit.fields['metadata.tags']"
+												:key="tag"
+												:to="{ name: 'Search', query: { tag: tag }}">
+												<span class="tag is-info" style="margin-left: .5rem;">{{ tag }}</span>
+											</router-link>
+										</span>
+										<span v-else>
+											<router-link
+												v-if="hit.fields['metadata.tags']"
+												:to="{ name: 'Search', query: { tag: hit.fields['metadata.tags'] }}">
+												<span class="tag is-info" style="margin-left: .5rem;">{{ hit.fields['metadata.tags'] }}</span>
+											</router-link>
+										</span>
+									</div>
+									<div style="margin-top: 0.5rem;">
+										<font-awesome-icon :icon="['fa', 'calendar']" fixed-width />
+										Modified {{ formatDate(hit.fields['metadata.modified']) }}
+									</div>
 								</div>
 							</div>
 						</div>
@@ -137,7 +189,11 @@
 				query: {
 					page: 1,
 					q: '',
-					tag: []
+					tag: [],
+					sort: {
+						field: '',
+						order: ''
+					}
 				}
 			}
 		},
@@ -170,7 +226,20 @@
 		created () {
 			this.fetchData()
 		},
+		filters: {
+			truncate (value) {
+				let truncate_at = 250
+
+				if (value.length > truncate_at)
+					return value.substring(0, truncate_at) + '...'
+				else
+					return value
+			}
+		},
 		methods: {
+			formatDate (value) {
+				return this.$moment(value).format('MMMM Do YYYY, h:mm a')
+			},
 			parseQuery () {
 				var vm = this
 
@@ -187,6 +256,12 @@
 						this.query.tag.push(this.$route.query.tag)
 					}
 				}
+
+				this.query.sort.field = this.$route.query.sort || ''
+				if (this.$route.query.order == 'desc' || this.$route.query.order == 'asc') {
+					this.query.sort.order = this.$route.query.order
+				}
+
 				window.document.title = 'Search: ' + this.query.q
 			},
 			// Fetch the page contents from the api
@@ -228,6 +303,17 @@
 					query.push('tag=' + item)
 				})
 
+				let sort = ''
+				if (this.query.sort.order !== 'asc') {
+					sort = '-'
+				}
+				if (this.query.sort.field === '') {
+					sort += 'metadata.modified'
+				} else {
+					sort += this.query.sort.field
+				}
+				query.push('sort=' + sort)
+
 				return query.join('&')
 			},
 
@@ -241,6 +327,12 @@
 				}
 				if (this.query.tag.length > 0) {
 					query.tag = this.query.tag.slice()
+				}
+				if (this.query.sort.field !== '') {
+					query.sort = this.query.sort.field
+				}
+				if (this.query.sort.order !== '') {
+					query.order = this.query.sort.order
 				}
 				return query
 			},

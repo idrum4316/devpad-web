@@ -18,7 +18,7 @@
 									<span class="panel-icon">
 										<font-awesome-icon :icon="['fa', 'file']" fixed-width />
 									</span>
-									{{ page.fields.title || page.id }}
+									{{ page.fields['metadata.title'] || page.id }}
 								</router-link>
 							</div>
 						</div>

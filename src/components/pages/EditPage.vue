@@ -173,10 +173,10 @@
 				vm.loading = true
 				this.$axios.get('/api/pages/' + this.slug + '?format=source')
 					.then(function (response) {
-						vm.pageDisplayTitle = response.data.title
-						vm.tagList = response.data.tags
+						vm.pageDisplayTitle = response.data.metadata.title
+						vm.tagList = response.data.metadata.tags
 						vm.editor.setValue(response.data.contents, -1)
-						vm.pageModifiedDate = new Date(response.data.modified)
+						vm.pageModifiedDate = new Date(response.data.metadata.modified)
 						vm.editor.on('change', () => {
 							vm.dirty = true
 						})
@@ -201,8 +201,10 @@
 				var vm = this
 
 				this.$axios.put('/api/pages/' + this.slug, {
-					title: this.pageDisplayTitle,
-					tags: this.tagList,
+					metadata: {
+						title: this.pageDisplayTitle,
+						tags: this.tagList,
+					},
 					contents: content
 				})
 				.then(function (response) {
