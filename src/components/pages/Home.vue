@@ -72,7 +72,7 @@
 				var vm = this
 				vm.loading = true
 
-				this.$axios.get('/api/search?sort=-modified', {
+				this.$axios.get('/api/search?sort=-metadata.modified', {
 					headers: {'jwt': localStorage.getItem('jwt')}
 				})
 				.then(function (response) {
