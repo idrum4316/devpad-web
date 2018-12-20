@@ -51,6 +51,14 @@ let router = new Router ({
                     meta: {
                         requires_auth: true
                     }
+                },
+                {
+                    path: '/settings',
+                    name: 'Settings',
+                    component: () => import('@/components/pages/Settings'),
+                    meta: {
+                        requires_auth: true
+                    }
                 }
             ]
         },

@@ -80,26 +80,34 @@
 
 				<br>
 
-				<button class="button is-success" @click="savePage">
-					<span class="icon">
-						<font-awesome-icon :icon="['fa', 'save']" />
-					</span>
-					<span>Save</span>
-				</button>
+				<div class="field is-grouped">
+					<div class="control">
+						<button class="button is-success" @click="savePage">
+							<span class="icon">
+								<font-awesome-icon :icon="['fa', 'save']" />
+							</span>
+							<span>Save</span>
+						</button>
+					</div>
 
-				<button class="button is-warning" @click="cancelEdit">
-					<span class="icon">
-						<font-awesome-icon :icon="['fa', 'ban']" />
-					</span>
-					<span>Cancel</span>
-				</button>
+					<div class="control">
+						<button class="button is-warning" @click="cancelEdit">
+							<span class="icon">
+								<font-awesome-icon :icon="['fa', 'ban']" />
+							</span>
+							<span>Cancel</span>
+						</button>
+					</div>
 
-				<button class="button is-danger" @click="deletePage">
-					<span class="icon">
-						<font-awesome-icon :icon="['fa', 'trash']" />
-					</span>
-					<span>Delete</span>
-				</button>
+					<div class="control">
+						<button class="button is-danger" @click="deletePage">
+							<span class="icon">
+								<font-awesome-icon :icon="['fa', 'trash']" />
+							</span>
+							<span>Delete</span>
+						</button>
+					</div>
+				</div>
 			</div>
 
 		</div>

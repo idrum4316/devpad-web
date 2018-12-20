@@ -35,11 +35,11 @@
 						Home
 					</router-link>
 
-					<!-- All Pages -->
+					<!-- Search -->
 					<router-link class="navbar-item" :to="{ name: 'Search' }">
-						<font-awesome-icon :icon="['fa', 'file-alt']" fixed-width />
+						<font-awesome-icon :icon="['fa', 'search']" fixed-width />
 						&nbsp;
-						Pages
+						Search
 					</router-link>
 
 					<!-- All Tags -->
@@ -55,6 +55,13 @@
 						&nbsp;
 						New
 					</a>
+
+					<!-- Settings -->
+					<router-link class="navbar-item" :to="{ name: 'Settings' }">
+						<font-awesome-icon :icon="['fa', 'cogs']" fixed-width />
+						&nbsp;
+						Settings
+					</router-link>
 
 					<!-- Logout -->
 					<a class="navbar-item" @click="logout">

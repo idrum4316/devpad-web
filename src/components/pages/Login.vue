@@ -1,31 +1,39 @@
 <template>
-	<div>
-        <form @submit.prevent="getToken" class="has-text-centered">
+    <section class="hero is-fullheight" id="login-bg">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <div class="column is-4 is-offset-4">
+                    <div class="box">
+                        <div class="notification is-danger" v-if="error">
+                            <font-awesome-icon :icon="['fa', 'exclamation-triangle']" />
+                            Login failed.
+                        </div>
 
-            <div class="field">
-                <label class="label">Username</label>
-                <div class="control has-icons-left">
-                    <input class="input" type="text" v-model="username">
-                    <span class="icon is-small is-left">
-                        <font-awesome-icon :icon="['fa', 'user']" />
-                    </span>
+                        <form @submit.prevent="getToken">
+
+                            <!-- username -->
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input is-large" type="text" placeholder="username" autofocus="" autocomplete="off" v-model="username">
+                                </div>
+                            </div>
+
+                            <!-- password -->
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input is-large" type="password" placeholder="password" autocomplete="off" v-model="password">
+                                </div>
+                            </div>
+
+                            <!-- submit -->
+                            <button class="button is-block is-info is-large is-fullwidth" v-bind:class="{ 'is-loading': loading }">Login</button>
+                        
+                        </form>
+                    </div>
                 </div>
             </div>
-
-            <div class="field">
-                <label class="label">Password</label>
-                <div class="control has-icons-left">
-                    <input class="input" type="password" v-model="password">
-                    <span class="icon is-small is-left">
-                        <font-awesome-icon :icon="['fa', 'key']" />
-                    </span>
-                </div>
-            </div>
-
-            <button class="button is-primary" v-bind:class="{ 'is-loading': loading }" type="submit">Login</button>
-
-        </form>
-	</div>
+        </div>
+    </section>
 </template>
 
 <script>
@@ -37,12 +45,14 @@
 			return {
                 username: '',
                 password: '',
-                loading: false
+                loading: false,
+                error: false
 			}
 		},
 		methods: {
             getToken () {
                 var vm = this
+                vm.error = false
 				vm.loading = true
 
 				this.$axios.post('/api/auth/token', {
@@ -56,6 +66,7 @@
                     }
                 })
                 .catch(function (error) {
+                    vm.error = true
                     console.log(error.message)
                 })
                 .then(function () {
@@ -65,3 +76,10 @@
 		}
 	}
 </script>
+
+<style scoped>
+    #login-bg {
+        background-image: url(/login-bg.jpg);
+        background-size: cover;
+    }
+</style>
