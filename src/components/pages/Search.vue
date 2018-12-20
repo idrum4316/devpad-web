@@ -270,20 +270,22 @@
 				vm.loading = true
 				vm.parseQuery()
 
-				this.$axios.get('/api/search?' + this.queryToURL())
-					.then(function (response) {
-						vm.hits = response.data.hits
-						vm.took = (response.data.took / 1000000000).toFixed(4)
-						vm.totalHits = response.data.total_hits
-						vm.facets = response.data.facets
-						scroll(0,0)
-						vm.loading = false
-					})
-					.catch(function (error) {
-						vm.error = true
-						vm.loading = false
-						console.log(error.message)
-					})
+				this.$axios.get('/api/search?' + this.queryToURL(), {
+					headers: {'jwt': localStorage.getItem('jwt')}
+				})
+				.then(function (response) {
+					vm.hits = response.data.hits
+					vm.took = (response.data.took / 1000000000).toFixed(4)
+					vm.totalHits = response.data.total_hits
+					vm.facets = response.data.facets
+					scroll(0,0)
+					vm.loading = false
+				})
+				.catch(function (error) {
+					vm.error = true
+					vm.loading = false
+					console.log(error.message)
+				})
 				// end Axios GET
 
 			}, // end fetchData

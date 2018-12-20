@@ -56,6 +56,13 @@
 						New
 					</a>
 
+					<!-- Logout -->
+					<a class="navbar-item" @click="logout">
+						<font-awesome-icon :icon="['fa', 'sign-out-alt']" fixed-width />
+						&nbsp;
+						Logout
+					</a>
+
 				</div>
 			</div>
 		</div>
@@ -134,6 +141,10 @@
 			goToPage () {
 				this.closeNewPageModal()
 				this.$router.push({ name: 'EditPage', params: { slug: this.newPageSlug }})
+			},
+			logout () {
+				localStorage.removeItem('jwt')
+				this.$router.push({ name: 'Login' })
 			}
 		}
 	}

@@ -72,18 +72,20 @@
 				var vm = this
 				vm.loading = true
 
-				this.$axios.get('/api/search?sort=-modified')
-					.then(function (response) {
-						vm.pages = response.data.hits
-						vm.tags = response.data.facets.tags
-						vm.totalPages = response.data.total_hits
-						vm.loading = false
-					})
-					.catch(function (error) {
-						vm.error = true
-						vm.loading = false
-						console.log(error.message)
-					})
+				this.$axios.get('/api/search?sort=-modified', {
+					headers: {'jwt': localStorage.getItem('jwt')}
+				})
+				.then(function (response) {
+					vm.pages = response.data.hits
+					vm.tags = response.data.facets.tags
+					vm.totalPages = response.data.total_hits
+					vm.loading = false
+				})
+				.catch(function (error) {
+					vm.error = true
+					vm.loading = false
+					console.log(error.message)
+				})
 				// end Axios GET
 
 			}, // end fetchData

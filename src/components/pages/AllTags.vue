@@ -72,15 +72,17 @@
 			fetchData () {
 				var vm = this
 
-				this.$axios.get('/api/tags')
-					.then(function (response) {
-						vm.loading = false
-						vm.tags = response.data.facets.tags.terms
-					})
-					.catch(function (error) {
-						vm.loading = false
-						console.log(error.message)
-					})
+				this.$axios.get('/api/tags', {
+					headers: {'jwt': localStorage.getItem('jwt')}
+				})
+				.then(function (response) {
+					vm.loading = false
+					vm.tags = response.data.facets.tags.terms || []
+				})
+				.catch(function (error) {
+					vm.loading = false
+					console.log(error.message)
+				})
 				// end Axios GET
 
 			} // end fetchData

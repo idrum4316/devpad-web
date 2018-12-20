@@ -11,10 +11,10 @@ import moment from 'moment'
 Object.defineProperty(Vue.prototype, '$moment', { value: moment })
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faFile, faTag, faSearch, faHome, faFileAlt, faTags, faPlus, faFilter, faEdit, faEye, faSave, faBan, faTrash, faAngleDown, faCalendar, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
+import { faFile, faTag, faSearch, faHome, faFileAlt, faTags, faPlus, faFilter, faEdit, faEye, faSave, faBan, faTrash, faAngleDown, faCalendar, faExclamationTriangle, faUser, faKey, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faFile, faTag, faSearch, faHome, faFileAlt, faTags, faPlus, faFilter, faEdit, faEye, faSave, faBan, faTrash, faAngleDown, faCalendar, faExclamationTriangle)
+library.add(faFile, faTag, faSearch, faHome, faFileAlt, faTags, faPlus, faFilter, faEdit, faEye, faSave, faBan, faTrash, faAngleDown, faCalendar, faExclamationTriangle, faUser, faKey, faSignOutAlt)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 new Vue({

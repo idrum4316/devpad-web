@@ -171,29 +171,31 @@
 			fetchPage () {
 				var vm = this
 				vm.loading = true
-				this.$axios.get('/api/pages/' + this.slug + '?format=source')
-					.then(function (response) {
-						vm.pageDisplayTitle = response.data.metadata.title
-						vm.tagList = response.data.metadata.tags
-						vm.editor.setValue(response.data.contents, -1)
-						vm.pageModifiedDate = new Date(response.data.metadata.modified)
-						vm.editor.on('change', () => {
-							vm.dirty = true
-						})
-						vm.loading = false
+				this.$axios.get('/api/pages/' + this.slug + '?format=source', {
+					headers: {'jwt': localStorage.getItem('jwt')}
+				})
+				.then(function (response) {
+					vm.pageDisplayTitle = response.data.metadata.title
+					vm.tagList = response.data.metadata.tags
+					vm.editor.setValue(response.data.contents, -1)
+					vm.pageModifiedDate = new Date(response.data.metadata.modified)
+					vm.editor.on('change', () => {
+						vm.dirty = true
 					})
-					.catch(function (error) {
-						vm.pageDisplayTitle = ''
-						vm.pageTags = ''
-						vm.editor.setValue('', -1)
-						vm.pageModifiedDate = undefined
-						vm.loading = false
-						if (error.response) {
-							if (error.response.status !== 404) {
-								console.log(error.message)
-							}
+					vm.loading = false
+				})
+				.catch(function (error) {
+					vm.pageDisplayTitle = ''
+					vm.pageTags = ''
+					vm.editor.setValue('', -1)
+					vm.pageModifiedDate = undefined
+					vm.loading = false
+					if (error.response) {
+						if (error.response.status !== 404) {
+							console.log(error.message)
 						}
-					})
+					}
+				})
 			}, // end fetchPage
 
 			savePage () {
@@ -206,6 +208,8 @@
 						tags: this.tagList,
 					},
 					contents: content
+				}, {
+					headers: {'jwt': localStorage.getItem('jwt')}
 				})
 				.then(function (response) {
 					if (response.status === 200) {
@@ -228,7 +232,9 @@
 				}
 				var vm = this
 
-				this.$axios.delete('/api/pages/' + this.slug)
+				this.$axios.delete('/api/pages/' + this.slug, {
+					headers: {'jwt': localStorage.getItem('jwt')}
+				})
 				.then(function (response) {
 					if (response.status === 200) {
 						vm.dirty = false
@@ -248,6 +254,8 @@
 				vm.previewLoading = true
 				this.$axios.post('/api/preview', {
 					contents: content
+				}, {
+					headers: {'jwt': localStorage.getItem('jwt')}
 				})
 				.then(function (response) {
 					vm.previewLoading = false

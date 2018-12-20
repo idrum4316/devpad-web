@@ -180,29 +180,31 @@
 				vm.notFound = undefined
 				vm.pageContent = ''
 
-				this.$axios.get('/api/pages/' + this.slug + '?format=html')
-					.then(function (response) {
-						vm.loading = false
-						vm.page.title = response.data.metadata.title
-						vm.page.tags = response.data.metadata.tags
-						vm.page.content = response.data.contents
-						vm.page.modified = new Date(response.data.metadata.modified)
+				this.$axios.get('/api/pages/' + this.slug + '?format=html', {
+					headers: {'jwt': localStorage.getItem('jwt')}
+				})
+				.then(function (response) {
+					vm.loading = false
+					vm.page.title = response.data.metadata.title
+					vm.page.tags = response.data.metadata.tags
+					vm.page.content = response.data.contents
+					vm.page.modified = new Date(response.data.metadata.modified)
 
-						if (vm.page.title === '') {
-							vm.page.title = vm.slug
-						}
+					if (vm.page.title === '') {
+						vm.page.title = vm.slug
+					}
 
-						window.document.title = (vm.page.title === '') ? vm.slug : vm.page.title
-					})
-					.catch(function (error) {
-						vm.loading = false
-						if (error.response) {
-							if (error.response.status === 404) {
-								vm.notFound = true
-							}
+					window.document.title = (vm.page.title === '') ? vm.slug : vm.page.title
+				})
+				.catch(function (error) {
+					vm.loading = false
+					if (error.response) {
+						if (error.response.status === 404) {
+							vm.notFound = true
 						}
-						console.log(error.message)
-					})
+					}
+					console.log(error.message)
+				})
 			}, // end fetchData
 			editPage () {
 				this.$router.push({ path: `/pages/${this.slug}/edit` })
@@ -213,7 +215,9 @@
 				}
 				var vm = this
 
-				this.$axios.delete('/api/pages/' + this.slug)
+				this.$axios.delete('/api/pages/' + this.slug, {
+					headers: {'jwt': localStorage.getItem('jwt')}
+				})
 				.then(function (response) {
 					if (response.status === 200) {
 						vm.$router.push({ path: `/` })
