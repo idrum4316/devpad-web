@@ -14,6 +14,9 @@
 		name: 'LoginLayout',
 		data () {
 			return {}
-		}
+        },
+        created () {
+            window.document.title = 'Login'
+        }
 	}
 </script>
