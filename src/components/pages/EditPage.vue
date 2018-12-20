@@ -185,16 +185,17 @@
 					vm.loading = false
 				})
 				.catch(function (error) {
+					if (error.response) {
+						if (error.response.status === 401) {
+							vm.$bus.$emit('logout')
+						}
+					}
 					vm.pageDisplayTitle = ''
 					vm.pageTags = ''
 					vm.editor.setValue('', -1)
 					vm.pageModifiedDate = undefined
 					vm.loading = false
-					if (error.response) {
-						if (error.response.status !== 404) {
-							console.log(error.message)
-						}
-					}
+					console.log(error.message)
 				})
 			}, // end fetchPage
 
@@ -219,6 +220,11 @@
 				})
 				.catch(function (error) {
 					console.log(error.message)
+					if (error.response) {
+						if (error.response.status === 401) {
+							vm.$bus.$emit('logout')
+						}
+					}
 				})
 			}, // end savePage
 
@@ -243,6 +249,11 @@
 				})
 				.catch(function (error) {
 					console.log(error.message)
+					if (error.response) {
+						if (error.response.status === 401) {
+							vm.$bus.$emit('logout')
+						}
+					}
 				})
 			}, // end deletePage
 
@@ -264,6 +275,11 @@
 				.catch(function (error) {
 					vm.previewLoading = false
 					console.log(error.message)
+					if (error.response) {
+						if (error.response.status === 401) {
+							vm.$bus.$emit('logout')
+						}
+					}
 				})
 			}, // end getPreview
 

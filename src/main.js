@@ -17,6 +17,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(faFile, faTag, faSearch, faHome, faFileAlt, faTags, faPlus, faFilter, faEdit, faEye, faSave, faBan, faTrash, faAngleDown, faCalendar, faExclamationTriangle, faUser, faKey, faSignOutAlt)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
+Vue.prototype.$bus = new Vue(); // Global event bus
+
 new Vue({
   router,
   render: h => h(App),

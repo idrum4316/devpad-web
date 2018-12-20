@@ -17,6 +17,23 @@
 		components: { TopNav, BottomFooter },
 		data () {
 			return {}
+		},
+		events: {
+			unauthorized () {
+				this.logout()
+			}
+		},
+		created () {
+			this.$bus.$on('logout', this.logout);
+		},
+		beforeDestroy() {
+			this.$bus.$off('logout');
+		},
+		methods: {
+			logout () {
+				localStorage.removeItem('jwt')
+				this.$router.push({ name: 'Login' })
+			}
 		}
 	}
 </script>

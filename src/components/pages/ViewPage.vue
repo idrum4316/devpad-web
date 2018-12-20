@@ -198,12 +198,15 @@
 				})
 				.catch(function (error) {
 					vm.loading = false
+					console.log(error.message)
 					if (error.response) {
+						if (error.response.status === 401) {
+							vm.$bus.$emit('logout')
+						}
 						if (error.response.status === 404) {
 							vm.notFound = true
 						}
 					}
-					console.log(error.message)
 				})
 			}, // end fetchData
 			editPage () {
@@ -225,6 +228,11 @@
 				})
 				.catch(function (error) {
 					console.log(error.message)
+					if (error.response) {
+						if (error.response.status === 401) {
+							vm.$bus.$emit('logout')
+						}
+					}
 				})
 			} // end deletePage
 		}

@@ -143,8 +143,7 @@
 				this.$router.push({ name: 'EditPage', params: { slug: this.newPageSlug }})
 			},
 			logout () {
-				localStorage.removeItem('jwt')
-				this.$router.push({ name: 'Login' })
+				this.$bus.$emit('logout')
 			}
 		}
 	}

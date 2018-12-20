@@ -82,6 +82,11 @@
 				.catch(function (error) {
 					vm.loading = false
 					console.log(error.message)
+					if (error.response) {
+						if (error.response.status === 401) {
+							vm.$bus.$emit('logout')
+						}
+					}
 				})
 				// end Axios GET
 
