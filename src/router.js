@@ -69,23 +69,35 @@ let router = new Router ({
                 {
                     path: '/login',
                     name: 'Login',
-                    component: () => import('@/components/pages/Login')
+                    component: () => import('@/components/pages/Login'),
+                    meta: {
+                        requires_anon: true
+                    }
                 }
             ]
         }
     ]
 })
 
+// Apply some routing rules based on route metadata
 router.beforeEach((to, from, next) => {
+
+    // if meta.requires_auth, check for the presence of a JWT
     if (to.matched.some(record => record.meta.requires_auth)) {
         if (localStorage.getItem('jwt') == null) {
-            next({ path: '/login' })
-        } else {
-            next()
+            next({ name: 'Login' })
         }
-    } else {
-        next() 
     }
+
+    // if meta.requires_anon, make sure there is no JWT
+    if (to.matched.some(record => record.meta.requires_anon)) {
+        if (localStorage.getItem('jwt') != null) {
+            next({ name: 'Home' })
+        }
+    }
+    
+    // do nothing
+    next()
 })
 
 export default router
