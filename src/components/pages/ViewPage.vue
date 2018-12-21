@@ -90,13 +90,15 @@
 					</div>
 
 					<div class="column is-one-quarter is-hidden-mobile">
-						<span class="subtitle is-5">Table of Contents</span>
-						<br><br>
-						<div class="toc-list">
-							<div class="toc-item" v-for="heading in pageWithTOC.toc" :class="'heading-' + heading.depth" :key="heading.index">
-								<a class="pointer" :href="'#toc_' + heading.index" :title="heading.title">
-									{{ heading.title }}
-								</a>
+						<div class="toc-container">
+							<span class="subtitle is-5">Table of Contents</span>
+							<br><br>
+							<div class="toc-list">
+								<div class="toc-item" v-for="heading in pageWithTOC.toc" :class="'heading-' + heading.depth" :key="heading.index">
+									<a class="pointer" :href="'#toc_' + heading.index" :title="heading.title">
+										{{ heading.title }}
+									</a>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -243,6 +245,10 @@
 	/*
 		Set the indentation on the table of contents
 	*/
+	.toc-container {
+		padding-left: 1rem;
+		border-left: 2px solid whitesmoke;
+	}
 	.toc-item {
 		padding-bottom: 1rem;
 		word-break: break-word;
