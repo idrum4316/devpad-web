@@ -12,7 +12,7 @@
 								</span>
 							</div>
 							<div class="control">
-								<button type="submit" class="button is-info">
+								<button type="submit" class="button is-primary">
 									Search
 								</button>
 							</div>
@@ -81,7 +81,7 @@
 							</div>
 
 							<div class="panel-block" v-if="query.tag.length > 0">
-								<button class="button is-link is-outlined is-fullwidth" @click="query.tag = []; refresh()">
+								<button class="button is-primary is-outlined is-fullwidth" @click="query.tag = []; refresh()">
 									clear
 								</button>
 							</div>
@@ -135,14 +135,14 @@
 												v-for="tag in hit.fields['metadata.tags']"
 												:key="tag"
 												:to="{ name: 'Search', query: { tag: tag }}">
-												<span class="tag is-info" style="margin-left: .5rem;">{{ tag }}</span>
+												<span class="tag is-link" style="margin-left: .5rem;">{{ tag }}</span>
 											</router-link>
 										</span>
 										<span v-else>
 											<router-link
 												v-if="hit.fields['metadata.tags']"
 												:to="{ name: 'Search', query: { tag: hit.fields['metadata.tags'] }}">
-												<span class="tag is-info" style="margin-left: .5rem;">{{ hit.fields['metadata.tags'] }}</span>
+												<span class="tag is-link" style="margin-left: .5rem;">{{ hit.fields['metadata.tags'] }}</span>
 											</router-link>
 										</span>
 									</div>

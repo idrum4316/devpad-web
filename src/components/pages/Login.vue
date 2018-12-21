@@ -26,7 +26,7 @@
                             </div>
 
                             <!-- submit -->
-                            <button class="button is-block is-info is-large is-fullwidth" v-bind:class="{ 'is-loading': loading }">Login</button>
+                            <button class="button is-block is-primary is-large is-fullwidth" v-bind:class="{ 'is-loading': loading }">Login</button>
                         
                         </form>
                     </div>
@@ -61,7 +61,14 @@
                 })
                 .then(function (response) {
                     if (response.status === 200 && response.data.token) {
+
                         localStorage.setItem('jwt', response.data.token)
+                        localStorage.setItem('is_admin', response.data.is_admin)
+                        localStorage.setItem('username', response.data.username)
+                        
+                        vm.$store.commit('set_admin', response.data.is_admin)
+                        vm.$store.commit('set_username', response.data.username)
+
                         vm.$router.push({ path: `/` })
                     }
                 })

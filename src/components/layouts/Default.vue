@@ -32,6 +32,8 @@
 		methods: {
 			logout () {
 				localStorage.removeItem('jwt')
+				localStorage.removeItem('is_admin')
+				localStorage.removeItem('username')
 				this.$router.push({ name: 'Login' })
 			}
 		}

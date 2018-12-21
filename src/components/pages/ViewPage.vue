@@ -88,7 +88,7 @@
 							<div style="margin-bottom: .5rem;" v-if="page.tags.length > 0">
 								<font-awesome-icon :icon="['fa', 'tags']" fixed-width />
 								<router-link v-for="tag in page.tags" :key="tag" :to="{ name: 'Search', query: { tag: tag }}">
-									<span class="tag is-info" style="margin-left: .5rem;">{{ tag }}</span>
+									<span class="tag is-link" style="margin-left: .5rem;">{{ tag }}</span>
 								</router-link>
 							</div>
 
