@@ -10,7 +10,7 @@
 			<div v-show="loading === false">
 				<div class="title">Editing '{{ slug }}'</div>
 
-				<div class="tabs is-boxed">
+				<div class="tabs">
 					<ul>
 						<li v-bind:class="{ 'is-active': view === 'edit' }">
 							<a @click="view = 'edit'">

@@ -29,22 +29,98 @@
 					<loader></loader>
 				</div>
 
-				<div class="columns" v-else>
+				<div v-else>
+					<div class="columns">
 
-					<!-- Filters -->
-					<div class="column is-one-quarter is-hidden-mobile">
+						<div class="column">
+							<!-- No Results Warning -->
+							<article class="notification is-warning" v-if="totalHits === 0">
+								<div class="subtitle">
+									<font-awesome-icon :icon="['fa', 'exclamation-triangle']" />
+									No Results Found!
+								</div>
+								<p>
+									Modify your search and try again
+								</p>
+							</article>
 
-						<!-- Sort Filter -->
-						<nav class="panel">
-							<p class="panel-heading">
-								Sort Order
-							</p>
-							<div class="panel-block">
-								<form @submit.prevent="" style="width: 100%;">
+							<!-- Search Hits -->
+							<div style="margin-bottom: 2.5rem;" v-for="hit in hits" :key="hit.id">
+								<div>
+									
+									<router-link class="subtitle is-5 has-text-primary" :to="{ name: 'ViewPage', params: { slug: hit.id }}">
+										<font-awesome-icon :icon="['fa', 'file-alt']" /> {{ hit.fields['metadata.title'] || hit.id }}
+									</router-link>
 
-									<!-- Sort Field -->
+									<div v-if="hit.fragments && hit.fragments.contents">
+										<p v-for="fragment in hit.fragments.contents" v-html="fragment" :key="fragment.id"></p>
+									</div>
+									<div v-else>
+										<p>
+											{{ hit.fields.contents | truncate }}
+										</p>
+									</div>
+
+									<!-- Page Meta Info -->
+									<div class="has-text-grey-light">
+										<div style="margin-top: 0.5rem;">
+
+											<!-- Modified Date -->
+											<span style="margin-right: 0.5rem;">
+												<font-awesome-icon :icon="['fa', 'calendar']" fixed-width />
+												Modified {{ formatDate(hit.fields['metadata.modified']) }}
+											</span>
+
+											<!-- Tags -->
+											<span>
+												<font-awesome-icon :icon="['fa', 'tags']" fixed-width />
+												<span v-if="Array.isArray(hit.fields['metadata.tags'])">
+													<router-link
+														v-for="tag in hit.fields['metadata.tags']"
+														:key="tag"
+														:to="{ name: 'Search', query: { tag: tag }}">
+														<span class="tag is-link" style="margin-left: .5rem;">{{ tag }}</span>
+													</router-link>
+												</span>
+												<span v-else>
+													<router-link
+														v-if="hit.fields['metadata.tags']"
+														:to="{ name: 'Search', query: { tag: hit.fields['metadata.tags'] }}">
+														<span class="tag is-link" style="margin-left: .5rem;">{{ hit.fields['metadata.tags'] }}</span>
+													</router-link>
+												</span>
+											</span>
+
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Pagination -->
+							<nav class="pagination is-centered" aria-label="pagination" role="navigation" v-if="totalHits > 0">
+								<a class="pagination-previous" @click="prevPage" v-bind:disabled="query.page <= 1">Previous</a>
+								<a class="pagination-next" @click="nextPage" v-bind:disabled="!hasNextPage">Next page</a>
+
+								<ul class="pagination-list">
+									<li><a class="pagination-link">{{ query.page }}</a></li>
+								</ul>
+							</nav>
+						</div>
+
+						<!-- Filters -->
+						<div class="column is-one-quarter is-hidden-mobile">
+
+							<!-- Sort Filter -->
+							<nav class="panel">
+
+								<p class="panel-heading" style="border-bottom: none;">
+									Sort Field
+								</p>
+
+								<!-- Sort Field -->
+								<div>
 									<div class="field">
-										<div class="control is-expanded">
+										<div class="control">
 											<div class="select is-fullwidth">
 												<select v-model="query.sort.field" @change="query.page = 1; refresh()">
 													<option value="">Modified Date</option>
@@ -53,118 +129,52 @@
 											</div>
 										</div>
 									</div>
+								</div>
 
-									<!-- Sort Order -->
-									<div class="field">
-										<div class="control is-expanded">
-											<div class="select is-fullwidth">
-												<select v-model="query.sort.order" @change="query.page = 1; refresh()">
-													<option value="">Descending</option>
-													<option value="asc">Ascending</option>
-												</select>
-											</div>
+							</nav>
+
+							<!-- Sort Filter -->
+							<nav class="panel">
+
+								<p class="panel-heading" style="border-bottom: none;">
+									Sort Order
+								</p>
+
+								<!-- Sort Order -->
+								<div class="field">
+									<div class="control">
+										<div class="select is-fullwidth">
+											<select v-model="query.sort.order" @change="query.page = 1; refresh()">
+												<option value="">Descending</option>
+												<option value="asc">Ascending</option>
+											</select>
 										</div>
 									</div>
-
-								</form>
-							</div>
-						</nav>
-
-						<!-- Tag Filter -->
-						<nav class="panel" v-if="facets.tags">
-							<p class="panel-heading">
-								Tag
-							</p>
-							<div class="panel-block" v-for="tag in facets.tags.terms" :key="tag.term">
-								<input type="checkbox" :value="tag.term" v-model="query.tag" @change="query.page = 1; refresh()">
-								{{ tag.term }} - {{ tag.count }}
-							</div>
-
-							<div class="panel-block" v-if="query.tag.length > 0">
-								<button class="button is-primary is-outlined is-fullwidth" @click="query.tag = []; refresh()">
-									clear
-								</button>
-							</div>
-						</nav>
-
-					</div>
-					<!-- End Filters -->
-
-					<div class="column">
-						<div class="title">Results</div>
-						<div class="subtitle">{{ startsAt }} - {{ endsAt }} of {{ totalHits }}</div>
-
-						<!-- No Results Warning -->
-						<article class="notification is-warning" v-if="totalHits === 0">
-							<div class="subtitle">
-								<font-awesome-icon :icon="['fa', 'exclamation-triangle']" />
-								No Results Found!
-							</div>
-							<p>
-								Modify your search and try again
-							</p>
-						</article>
-
-						<!-- Search Hits -->
-						<div class="card" style="margin-bottom: 1rem;" v-for="hit in hits" :key="hit.id">
-							<div class="card-content">
-								<router-link class="subtitle is-5 has-text-primary" :to="{ name: 'ViewPage', params: { slug: hit.id }}">
-									<font-awesome-icon :icon="['fa', 'file-alt']" /> {{ hit.fields['metadata.title'] || hit.id }}
-								</router-link>
-
-								<br>
-
-								<div v-if="hit.fragments && hit.fragments.contents">
-									<p v-for="fragment in hit.fragments.contents" v-html="fragment" :key="fragment.id"></p>
-								</div>
-								<div v-else>
-									<p>
-										{{ hit.fields.contents | truncate }}
-									</p>
 								</div>
 
-								<br>
+							</nav>
 
-								<!-- Page Meta Info -->
-								<div class="has-text-grey-light">
-									<!-- Tags -->
-									<div>
-										<font-awesome-icon :icon="['fa', 'tags']" fixed-width />
-										<span v-if="Array.isArray(hit.fields['metadata.tags'])">
-											<router-link
-												v-for="tag in hit.fields['metadata.tags']"
-												:key="tag"
-												:to="{ name: 'Search', query: { tag: tag }}">
-												<span class="tag is-link" style="margin-left: .5rem;">{{ tag }}</span>
-											</router-link>
-										</span>
-										<span v-else>
-											<router-link
-												v-if="hit.fields['metadata.tags']"
-												:to="{ name: 'Search', query: { tag: hit.fields['metadata.tags'] }}">
-												<span class="tag is-link" style="margin-left: .5rem;">{{ hit.fields['metadata.tags'] }}</span>
-											</router-link>
-										</span>
-									</div>
-									<div style="margin-top: 0.5rem;">
-										<font-awesome-icon :icon="['fa', 'calendar']" fixed-width />
-										Modified {{ formatDate(hit.fields['metadata.modified']) }}
-									</div>
+							<!-- Tag Filter -->
+							<nav class="panel" v-if="facets.tags">
+								<p class="panel-heading">
+									Tag
+								</p>
+								<div class="panel-block" v-for="tag in facets.tags.terms" :key="tag.term">
+									<input type="checkbox" :value="tag.term" v-model="query.tag" @change="query.page = 1; refresh()">
+									{{ tag.term }} - {{ tag.count }}
 								</div>
-							</div>
+
+								<div class="panel-block" v-if="query.tag.length > 0">
+									<button class="button is-primary is-outlined is-fullwidth" @click="query.tag = []; refresh()">
+										clear
+									</button>
+								</div>
+							</nav>
+
 						</div>
+						<!-- End Filters -->
 
-						<!-- Pagination -->
-						<nav class="pagination is-centered" aria-label="pagination" role="navigation" v-if="totalHits > 0">
-							<a class="pagination-previous" @click="prevPage" v-bind:disabled="query.page <= 1">Previous</a>
-							<a class="pagination-next" @click="nextPage" v-bind:disabled="!hasNextPage">Next page</a>
-
-							<ul class="pagination-list">
-								<li><a class="pagination-link">{{ query.page }}</a></li>
-							</ul>
-						</nav>
 					</div>
-
 				</div>
 			</div>
 		</section>

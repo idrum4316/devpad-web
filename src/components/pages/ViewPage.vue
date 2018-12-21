@@ -15,21 +15,9 @@
 
 				<div class="columns" v-else>
 
-					<div class="column is-one-quarter is-hidden-mobile">
-						<span class="subtitle is-5 has-text-primary">Table of Contents</span>
-						<br><br>
-						<div class="toc-list">
-							<div class="toc-item" v-for="heading in pageWithTOC.toc" :class="'heading-' + heading.depth" :key="heading.index">
-								<a class="pointer" :href="'#toc_' + heading.index" :title="heading.title">
-									{{ heading.title }}
-								</a>
-							</div>
-						</div>
-					</div>
-
 					<div class="column is-auto-x is-break-word">
 
-						<div class="columns is-vcentered is-mobile">
+						<div class="columns is-vcentered is-mobile" style="margin-bottom: 0;">
 							<div class="column">
 								<div class="title">{{ page.title }}</div>
 							</div>
@@ -99,6 +87,18 @@
 						<!-- Page Content -->
 						<div class="content" v-html="pageWithTOC.page"></div>
 
+					</div>
+
+					<div class="column is-one-quarter is-hidden-mobile">
+						<span class="subtitle is-5">Table of Contents</span>
+						<br><br>
+						<div class="toc-list">
+							<div class="toc-item" v-for="heading in pageWithTOC.toc" :class="'heading-' + heading.depth" :key="heading.index">
+								<a class="pointer" :href="'#toc_' + heading.index" :title="heading.title">
+									{{ heading.title }}
+								</a>
+							</div>
+						</div>
 					</div>
 
 				</div>
