@@ -248,6 +248,7 @@
 	.toc-container {
 		padding-left: 1rem;
 		border-left: 2px solid whitesmoke;
+		min-height: 250px;
 	}
 	.toc-item {
 		padding-bottom: 1rem;
