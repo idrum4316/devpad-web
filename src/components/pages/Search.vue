@@ -63,36 +63,36 @@
 
 									<!-- Page Meta Info -->
 									<div class="has-text-grey-light">
+
+										<!-- Modified Date -->
 										<div style="margin-top: 0.5rem;">
-
-											<!-- Modified Date -->
-											<span style="margin-right: 0.5rem;">
-												<font-awesome-icon :icon="['fa', 'calendar']" fixed-width />
-												Modified {{ formatDate(hit.fields['metadata.modified']) }}
-											</span>
-
-											<!-- Tags -->
-											<span>
-												<font-awesome-icon :icon="['fa', 'tags']" fixed-width />
-												<span v-if="Array.isArray(hit.fields['metadata.tags'])">
-													<router-link
-														v-for="tag in hit.fields['metadata.tags']"
-														:key="tag"
-														:to="{ name: 'Search', query: { tag: tag }}">
-														<span class="tag is-link" style="margin-left: .5rem;">{{ tag }}</span>
-													</router-link>
-												</span>
-												<span v-else>
-													<router-link
-														v-if="hit.fields['metadata.tags']"
-														:to="{ name: 'Search', query: { tag: hit.fields['metadata.tags'] }}">
-														<span class="tag is-link" style="margin-left: .5rem;">{{ hit.fields['metadata.tags'] }}</span>
-													</router-link>
-												</span>
-											</span>
-
+											<font-awesome-icon :icon="['fa', 'calendar']" fixed-width />
+											Modified {{ formatDate(hit.fields['metadata.modified']) }}
 										</div>
+
+										<!-- Tags -->
+										<div style="margin-top: 0.5rem;">
+											<font-awesome-icon :icon="['fa', 'tags']" fixed-width />
+											<span v-if="Array.isArray(hit.fields['metadata.tags'])">
+												<router-link
+													v-for="tag in hit.fields['metadata.tags']"
+													:key="tag"
+													:to="{ name: 'Search', query: { tag: tag }}">
+													<span class="tag is-link" style="margin-left: .5rem;">{{ tag }}</span>
+												</router-link>
+											</span>
+											<span v-else>
+												<router-link
+													v-if="hit.fields['metadata.tags']"
+													:to="{ name: 'Search', query: { tag: hit.fields['metadata.tags'] }}">
+													<span class="tag is-link" style="margin-left: .5rem;">{{ hit.fields['metadata.tags'] }}</span>
+												</router-link>
+											</span>
+										</div>
+
 									</div>
+									<!-- End Page Meta Info -->
+
 								</div>
 							</div>
 
