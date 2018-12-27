@@ -1,6 +1,6 @@
 <template>
 	<nav class="navbar is-dark">
-		<div class="container">
+		<div class="container is-fluid">
 			<div class="navbar-brand">
 				<router-link :to="{ name: 'Home' }" class="navbar-item">
 					<img src="/devpad-logo-text.png" alt="Devpad Logo" height="28">
@@ -155,18 +155,3 @@
 		}
 	}
 </script>
-
-<style>
-	.navbar {
-		border-radius: 0;
-	}
-
-	/*
-		Fix the background color on tablets
-	*/
-	@media screen and (max-width: 1087px) {
-		.navbar-menu {
-			background-color: inherit;
-		}
-	}
-</style>

@@ -1,116 +1,114 @@
 <template>
-	<section class="section">
-		<div class="container">
+	<section class="section is-paddingless">
 
-			<!-- Loading Icon -->
-			<div v-if="loading">
-				<loader></loader>
+		<!-- Loading Icon -->
+		<div v-if="loading">
+			<loader></loader>
+		</div>
+
+		<div v-show="loading === false">
+
+			<!-- Toolbar -->
+			<div class="devpad-toolbar is-clearfix">
+
+				<!-- Left Side -->
+				<div class="is-toolbar-left">
+					<span class="title is-4">Editing {{ slug }}</span>
+				</div>
+
+				<!-- Right Side -->
+				<div class="is-toolbar-right">
+					<button class="button is-small is-primary is-outlined mr-1" @click="view = 'edit'" v-show="view === 'preview'">
+						<span class="icon">
+							<font-awesome-icon :icon="['fa', 'edit']" />
+						</span>
+						<span>Edit</span>
+					</button>
+					<button class="button is-small is-primary is-outlined mr-1" @click="view = 'preview'; getPreview();" v-show="view === 'edit'">
+						<span class="icon">
+							<font-awesome-icon :icon="['fa', 'eye']" />
+						</span>
+						<span>Preview</span>
+					</button>
+					<button class="button is-small is-warning is-outlined mr-1" @click="cancelEdit">
+						<span class="icon">
+							<font-awesome-icon :icon="['fa', 'ban']" />
+						</span>
+						<span>Cancel</span>
+					</button>
+					<button class="button is-small is-success is-outlined" @click="savePage">
+						<span class="icon">
+							<font-awesome-icon :icon="['fa', 'save']" />
+						</span>
+						<span>Save</span>
+					</button>
+				</div>
+
 			</div>
 
-			<div v-show="loading === false">
-				<div class="title">Editing '{{ slug }}'</div>
+			<!-- Edit View -->
+			<div class="columns is-gapless">
 
-				<div class="tabs">
-					<ul>
-						<li v-bind:class="{ 'is-active': view === 'edit' }">
-							<a @click="view = 'edit'">
-								<span class="icon is-small">
-									<font-awesome-icon :icon="['fa', 'edit']" />
-								</span>
-								<span>Editor</span>
-							</a>
-						</li>
-						<li v-bind:class="{ 'is-active': view === 'preview' }">
-							<a @click="view = 'preview'; getPreview();">
-								<span class="icon is-small">
-									<font-awesome-icon :icon="['fa', 'eye']" />
-								</span>
-								<span>Preview</span>
-							</a>
-						</li>
-					</ul>
-				</div>
+				<!-- Markdown Editor / Preview -->
+				<div class="column">
+					<div class="editor-container">
 
-				<div v-show="view === 'edit'">
-					<div id="editor" ref="editor"></div>
-				</div>
+						<!-- Editor -->
+						<div id="editor" ref="editor" v-show="view === 'edit'"></div>
 
-				<div v-show="view === 'preview'">
-
-					<!-- Loading Icon -->
-					<div v-if="previewLoading">
-						<loader></loader>
-					</div>
-
-					<div v-else>
-						<div class="content" v-html="preview"></div>
-					</div>
-					<hr>
-
-				</div>
-
-				<br>
-
-				<div class="field">
-					<label class="label">Display Title</label>
-					<div class="control">
-						<input class="input" type="text" v-model="pageDisplayTitle" @change="dirty=true">
-					</div>
-				</div>
-
-				<div class="field">
-					<label class="label">Tags</label>
-
-					<div class="field is-grouped is-grouped-multiline">
-						<div class="control" v-for="tag in tagList" :key="tag">
-							<div class="tags has-addons">
-								<span class="tag is-dark">{{ tag }}</span>
-								<a class="tag is-delete" @click="removeTag(tag)"></a>
+						<!-- Preview -->
+						<div class="container is-fluid pr-2 pl-2" v-show="view === 'preview'">
+							<div class="is-devpad-content pt-2 pb-2">
+								<div v-if="previewLoading">
+									<loader></loader>
+								</div>
+								<div v-else>
+									<div class="content" v-html="preview"></div>
+								</div>
 							</div>
 						</div>
-					</div>
 
-					<div class="control has-icons-left">
-						<input class="input" type="text" v-model="tagInput" placeholder="Add Tag" @keyup.enter.prevent="addTag" @keydown.tab.prevent="addTag" @keydown.188.prevent="addTag">
-						<span class="icon is-small is-left">
-							<font-awesome-icon :icon="['fa', 'plus']" />
-						</span>
 					</div>
 				</div>
 
-				<br>
+				<!-- Metadata Fields -->
+				<div class="column is-narrow is-hidden-mobile">
+					<div class="is-devpad-sidebar pr-2 pl-2 pt-1 pb-1">
 
-				<div class="field is-grouped">
-					<div class="control">
-						<button class="button is-success" @click="savePage">
-							<span class="icon">
-								<font-awesome-icon :icon="['fa', 'save']" />
-							</span>
-							<span>Save</span>
-						</button>
-					</div>
+						<!-- Display Title -->
+						<div class="field">
+							<label class="label">Display Title</label>
+							<p class="control">
+								<input class="input" type="text" v-model="pageDisplayTitle" @change="dirty=true" :placeholder="slug">
+							</p>
+						</div>
 
-					<div class="control">
-						<button class="button is-warning" @click="cancelEdit">
-							<span class="icon">
-								<font-awesome-icon :icon="['fa', 'ban']" />
-							</span>
-							<span>Cancel</span>
-						</button>
-					</div>
+						<!-- Tags -->
+						<div class="field">
+							<label class="label">Tags</label>
+							<div class="field is-grouped is-grouped-multiline">
+								<div class="control" v-for="tag in tagList" :key="tag">
+									<div class="tags has-addons">
+										<span class="tag is-link">{{ tag }}</span>
+										<a class="tag is-delete" @click="removeTag(tag)"></a>
+									</div>
+								</div>
+							</div>
+							<div class="control has-icons-left">
+								<input class="input" type="text" v-model="tagInput" placeholder="Add Tag" @keyup.enter.prevent="addTag" @keydown.tab.prevent="addTag" @keydown.188.prevent="addTag">
+								<span class="icon is-small is-left">
+									<font-awesome-icon :icon="['fa', 'plus']" />
+								</span>
+							</div>
+						</div>
 
-					<div class="control">
-						<button class="button is-danger" @click="deletePage">
-							<span class="icon">
-								<font-awesome-icon :icon="['fa', 'trash']" />
-							</span>
-							<span>Delete</span>
-						</button>
 					</div>
 				</div>
+
 			</div>
 
 		</div>
+
 	</section>
 </template>
 
@@ -310,3 +308,25 @@
 		}
 	}
 </script>
+
+<style scoped>
+	.devpad-toolbar {
+		padding: 0.5rem 1rem;
+		border-bottom: 1px solid #dbdbdb;
+	}
+	.devpad-toolbar .is-toolbar-left {
+		float: left;
+	}
+	.devpad-toolbar .is-toolbar-right {
+		float: right;
+	}
+	#editor {
+		height: 100%;
+		width: 100%;
+	}
+	.editor-container {
+		overflow-y: auto;
+		height: calc(100vh - 101px);
+		border-right: 1px solid #dbdbdb;
+	}
+</style>

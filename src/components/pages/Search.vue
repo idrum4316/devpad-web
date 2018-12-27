@@ -1,8 +1,10 @@
 <template>
 	<div>
+
+		<!-- Search Input -->
 		<section class="hero is-light">
 			<div class="hero-body">
-				<div class="container">
+				<div class="container is-fluid">
 					<form v-on:submit.prevent="query.page = 1; refresh()">
 						<div class="field has-addons">
 							<div class="control is-expanded has-icons-left">
@@ -22,36 +24,43 @@
 			</div>
 		</section>
 
+		<!-- Search Results -->
 		<section class="section">
-			<div class="container">
+			<div class="container is-fluid">
 
+				<!-- Loading Icon -->
 				<div v-if="loading">
 					<loader></loader>
 				</div>
 
+				<!-- Once Loaded -->
 				<div v-else>
 					<div class="columns">
 
+						<!-- Search Results -->
 						<div class="column">
-							<!-- No Results Warning -->
-							<article class="notification is-warning" v-if="totalHits === 0">
-								<div class="subtitle">
-									<font-awesome-icon :icon="['fa', 'exclamation-triangle']" />
-									No Results Found!
-								</div>
-								<p>
-									Modify your search and try again
-								</p>
-							</article>
+							<div class="container is-fluid is-devpad-content">
 
-							<!-- Search Hits -->
-							<div style="margin-bottom: 2.5rem;" v-for="hit in hits" :key="hit.id">
-								<div>
-									
+								<!-- No Results Warning -->
+								<article class="notification is-warning" v-if="totalHits === 0">
+									<div class="subtitle">
+										<font-awesome-icon :icon="['fa', 'exclamation-triangle']" />
+										No Results Found!
+									</div>
+									<p>
+										Modify your search and try again
+									</p>
+								</article>
+
+								<!-- Search Hits -->
+								<div style="margin-bottom: 2.5rem;" v-for="hit in hits" :key="hit.id">
+										
+									<!-- Page Title -->
 									<router-link class="subtitle is-5 has-text-primary" :to="{ name: 'ViewPage', params: { slug: hit.id }}">
-										<font-awesome-icon :icon="['fa', 'file-alt']" /> {{ hit.fields['metadata.title'] || hit.id }}
+										{{ hit.fields['metadata.title'] || hit.id }}
 									</router-link>
 
+									<!-- Show Hit Fragments or partial contents -->
 									<div v-if="hit.fragments && hit.fragments.contents">
 										<p v-for="fragment in hit.fragments.contents" v-html="fragment" :key="fragment.id"></p>
 									</div>
@@ -61,7 +70,7 @@
 										</p>
 									</div>
 
-									<!-- Page Meta Info -->
+									<!-- Page Metadata -->
 									<div class="has-text-grey-light">
 
 										<!-- Modified Date -->
@@ -91,33 +100,32 @@
 										</div>
 
 									</div>
-									<!-- End Page Meta Info -->
 
 								</div>
+
+								<!-- Pagination -->
+								<nav class="pagination is-centered" aria-label="pagination" role="navigation" v-if="totalHits > 0">
+									<a class="pagination-previous" @click="prevPage" v-bind:disabled="query.page <= 1">Previous</a>
+									<a class="pagination-next" @click="nextPage" v-bind:disabled="!hasNextPage">Next page</a>
+
+									<ul class="pagination-list">
+										<li><a class="pagination-link">{{ query.page }}</a></li>
+									</ul>
+								</nav>
+
 							</div>
-
-							<!-- Pagination -->
-							<nav class="pagination is-centered" aria-label="pagination" role="navigation" v-if="totalHits > 0">
-								<a class="pagination-previous" @click="prevPage" v-bind:disabled="query.page <= 1">Previous</a>
-								<a class="pagination-next" @click="nextPage" v-bind:disabled="!hasNextPage">Next page</a>
-
-								<ul class="pagination-list">
-									<li><a class="pagination-link">{{ query.page }}</a></li>
-								</ul>
-							</nav>
 						</div>
 
 						<!-- Filters -->
-						<div class="column is-one-quarter is-hidden-mobile">
+						<div class="column is-narrow is-hidden-mobile">
 
-							<!-- Sort Filter -->
-							<nav class="panel">
+							<!-- Sort Field -->
+							<nav class="panel is-devpad-sidebar">
 
 								<p class="panel-heading" style="border-bottom: none;">
 									Sort Field
 								</p>
 
-								<!-- Sort Field -->
 								<div>
 									<div class="field">
 										<div class="control">
@@ -133,14 +141,13 @@
 
 							</nav>
 
-							<!-- Sort Filter -->
-							<nav class="panel">
+							<!-- Sort Order -->
+							<nav class="panel is-devpad-sidebar">
 
 								<p class="panel-heading" style="border-bottom: none;">
 									Sort Order
 								</p>
 
-								<!-- Sort Order -->
 								<div class="field">
 									<div class="control">
 										<div class="select is-fullwidth">
@@ -155,7 +162,7 @@
 							</nav>
 
 							<!-- Tag Filter -->
-							<nav class="panel" v-if="facets.tags">
+							<nav class="panel is-devpad-sidebar" v-if="facets.tags">
 								<p class="panel-heading">
 									Tag
 								</p>
@@ -172,12 +179,13 @@
 							</nav>
 
 						</div>
-						<!-- End Filters -->
 
 					</div>
 				</div>
+
 			</div>
 		</section>
+
 	</div>
 </template>
 

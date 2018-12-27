@@ -1,6 +1,6 @@
 <template>
 	<section class="section">
-		<div class="container">
+		<div class="container is-fluid">
 
 			<div v-if="loading">
 				<loader></loader>
@@ -17,80 +17,84 @@
 
 					<div class="column is-auto-x is-break-word">
 
-						<div class="columns is-vcentered is-mobile" style="margin-bottom: 0;">
-							<div class="column">
-								<div class="title">{{ page.title }}</div>
-							</div>
+						<div class="container is-fluid is-devpad-content">
 
-							<!-- Page Controls -->
-							<div class="column is-narrow">
-								<div class="dropdown is-right" ref="pageControls">
-									<div class="dropdown-trigger">
+							<div class="columns is-vcentered is-mobile" style="margin-bottom: 0;">
+								<div class="column">
+									<div class="title">{{ page.title }}</div>
+								</div>
 
-										<!-- Button Group -->
-										<div class="buttons has-addons mb-0">
-											<!-- Edit Button -->
-											<router-link class="button mb-0" :to="{ name: 'EditPage', params: { slug: slug }}">
-												<span class="icon is-small">
-													<font-awesome-icon :icon="['fa', 'edit']" />
-												</span>
-												<span>Edit</span>
-											</router-link>
+								<!-- Page Controls -->
+								<div class="column is-narrow">
+									<div class="dropdown is-right" ref="pageControls">
+										<div class="dropdown-trigger">
 
-											<button class="button mb-0" aria-haspopup="true" aria-controls="page-controls-menu" @click="$refs.pageControls.classList.toggle('is-active')">
-												<span class="icon is-small">
-													<font-awesome-icon :icon="['fa', 'angle-down']" />
-												</span>
-											</button>
-										</div>
-										<!-- End Button Group -->
+											<!-- Button Group -->
+											<div class="buttons has-addons mb-0">
+												<!-- Edit Button -->
+												<router-link class="button mb-0" :to="{ name: 'EditPage', params: { slug: slug }}">
+													<span class="icon is-small">
+														<font-awesome-icon :icon="['fa', 'edit']" />
+													</span>
+													<span>Edit</span>
+												</router-link>
 
-										<div class="dropdown-menu" id="page-controls-menu" role="menu">
-											<div class="dropdown-content">
-												<a class="dropdown-item">
-													Move
-												</a>
-												<a class="dropdown-item" @click="deletePage">
-													Delete
-												</a>
+												<button class="button mb-0" aria-haspopup="true" aria-controls="page-controls-menu" @click="$refs.pageControls.classList.toggle('is-active')">
+													<span class="icon is-small">
+														<font-awesome-icon :icon="['fa', 'angle-down']" />
+													</span>
+												</button>
 											</div>
-										</div>
+											<!-- End Button Group -->
 
+											<div class="dropdown-menu" id="page-controls-menu" role="menu">
+												<div class="dropdown-content">
+													<a class="dropdown-item">
+														Move
+													</a>
+													<a class="dropdown-item" @click="deletePage">
+														Delete
+													</a>
+												</div>
+											</div>
+
+										</div>
 									</div>
 								</div>
+								<!-- End Page Controls -->
+
 							</div>
-							<!-- End Page Controls -->
+
+							<!-- Page Meta Info -->
+							<div class="has-text-grey-light">
+
+								<!-- Updated Date -->
+								<div style="margin-bottom: .5rem;">
+									<font-awesome-icon :icon="['fa', 'calendar']" fixed-width />
+									Modified {{ formattedDate }}
+								</div>
+
+								<!-- Tags -->
+								<div style="margin-bottom: .5rem;" v-if="page.tags.length > 0">
+									<font-awesome-icon :icon="['fa', 'tags']" fixed-width />
+									<router-link v-for="tag in page.tags" :key="tag" :to="{ name: 'Search', query: { tag: tag }}">
+										<span class="tag is-link" style="margin-left: .5rem;">{{ tag }}</span>
+									</router-link>
+								</div>
+
+							</div>
+
+							<hr>
+
+							<!-- Page Content -->
+							<div class="content" v-html="pageWithTOC.page"></div>
 
 						</div>
-
-						<!-- Page Meta Info -->
-						<div class="has-text-grey-light">
-
-							<!-- Updated Date -->
-							<div style="margin-bottom: .5rem;">
-								<font-awesome-icon :icon="['fa', 'calendar']" fixed-width />
-								Modified {{ formattedDate }}
-							</div>
-
-							<!-- Tags -->
-							<div style="margin-bottom: .5rem;" v-if="page.tags.length > 0">
-								<font-awesome-icon :icon="['fa', 'tags']" fixed-width />
-								<router-link v-for="tag in page.tags" :key="tag" :to="{ name: 'Search', query: { tag: tag }}">
-									<span class="tag is-link" style="margin-left: .5rem;">{{ tag }}</span>
-								</router-link>
-							</div>
-
-						</div>
-
-						<hr>
-
-						<!-- Page Content -->
-						<div class="content" v-html="pageWithTOC.page"></div>
 
 					</div>
 
-					<div class="column is-one-quarter is-hidden-mobile">
-						<div class="toc-container">
+					<div class="column is-narrow is-hidden-mobile">
+						<div class="toc-container is-devpad-sidebar">
 							<span class="subtitle is-5">Table of Contents</span>
 							<br><br>
 							<div class="toc-list">

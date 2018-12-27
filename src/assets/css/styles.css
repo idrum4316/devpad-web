@@ -9,14 +9,8 @@
 	word-break: break-word;
 }
 
-#editor {
-	height: calc(100vh * 0.5);
-	min-height: 400px;
-	border: 1px solid #b5b5b5;
-}
-
 .no-wrap {
-	white-space:nowrap;
+	white-space: nowrap;
 }
 
 .pagination ul, .pagination ol {
@@ -37,4 +31,81 @@
 }
 .mr-0 {
 	margin-right: 0 !important;
+}
+.mb-1 {
+	margin-bottom: 0.5rem !important;
+}
+.mt-1 {
+	margin-top: 0.5rem !important;
+}
+.ml-1 {
+	margin-left: 0.5rem !important;
+}
+.mr-1 {
+	margin-right: 0.5rem !important;
+}
+.mb-2 {
+	margin-bottom: 1rem !important;
+}
+.mt-2 {
+	margin-top: 1rem !important;
+}
+.ml-2 {
+	margin-left: 1rem !important;
+}
+.mr-2 {
+	margin-right: 1rem !important;
+}
+
+/*
+	Padding utility classes
+*/
+.pb-0 {
+	padding-bottom: 0 !important;
+}
+.pt-0 {
+	padding-top: 0 !important;
+}
+.pl-0 {
+	padding-left: 0 !important;
+}
+.pr-0 {
+	padding-right: 0 !important;
+}
+.pb-1 {
+	padding-bottom: 0.5rem !important;
+}
+.pt-1 {
+	padding-top: 0.5rem !important;
+}
+.pl-1 {
+	padding-left: 0.5rem !important;
+}
+.pr-1 {
+	padding-right: 0.5rem !important;
+}
+.pb-2 {
+	padding-bottom: 1rem !important;
+}
+.pt-2 {
+	padding-top: 1rem !important;
+}
+.pl-2 {
+	padding-left: 1rem !important;
+}
+.pr-2 {
+	padding-right: 1rem !important;
+}
+
+/* Container Styles */
+.container .is-devpad-content {
+	max-width: 1000px;
+	margin: auto;
+}
+.container .is-devpad-content-wide {
+	max-width: 1250px;
+	margin: auto;
+}
+.is-devpad-sidebar {
+	width: 250px;
 }
