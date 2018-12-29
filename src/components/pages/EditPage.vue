@@ -189,6 +189,7 @@
 						vm.dirty = true
 					})
 					vm.loading = false
+					vm.editor.focus()
 				})
 				.catch(function (error) {
 					if (error.response) {
@@ -202,6 +203,7 @@
 					vm.pageModifiedDate = undefined
 					vm.loading = false
 					console.log(error.message)
+					vm.editor.focus()
 				})
 			}, // end fetchPage
 
