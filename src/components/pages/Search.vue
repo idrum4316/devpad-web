@@ -119,28 +119,6 @@
 						<!-- Filters -->
 						<div class="column is-narrow is-hidden-mobile">
 
-							<!-- Sort Field -->
-							<nav class="panel is-devpad-sidebar">
-
-								<p class="panel-heading" style="border-bottom: none;">
-									Sort Field
-								</p>
-
-								<div>
-									<div class="field">
-										<div class="control">
-											<div class="select is-fullwidth">
-												<select v-model="query.sort.field" @change="query.page = 1; refresh()">
-													<option value="">Modified Date</option>
-													<option value="metadata.title">Title</option>
-												</select>
-											</div>
-										</div>
-									</div>
-								</div>
-
-							</nav>
-
 							<!-- Sort Order -->
 							<nav class="panel is-devpad-sidebar">
 
@@ -148,13 +126,18 @@
 									Sort Order
 								</p>
 
-								<div class="field">
-									<div class="control">
-										<div class="select is-fullwidth">
-											<select v-model="query.sort.order" @change="query.page = 1; refresh()">
-												<option value="">Descending</option>
-												<option value="asc">Ascending</option>
-											</select>
+								<div>
+									<div class="field">
+										<div class="control">
+											<div class="select is-fullwidth">
+												<select v-model="query.sort" @change="query.page = 1; refresh()">
+													<option value="">--</option>
+													<option value="metadata.modified">Modified Date Ascending</option>
+													<option value="-metadata.modified">Modified Date Descending</option>
+													<option value="metadata.title">Title Ascending</option>
+													<option value="-metadata.title">Title Descending</option>
+												</select>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -208,10 +191,7 @@
 					page: 1,
 					q: '',
 					tag: [],
-					sort: {
-						field: '',
-						order: ''
-					}
+					sort: ''
 				}
 			}
 		},
@@ -288,10 +268,7 @@
 					}
 				}
 
-				this.query.sort.field = this.$route.query.sort || ''
-				if (this.$route.query.order == 'desc' || this.$route.query.order == 'asc') {
-					this.query.sort.order = this.$route.query.order
-				}
+				this.query.sort = this.$route.query.sort || ''
 
 				window.document.title = 'Search: ' + this.query.q
 			},
@@ -344,16 +321,13 @@
 					query.push('tag=' + item)
 				})
 
-				let sort = ''
-				if (this.query.sort.order !== 'asc') {
-					sort = '-'
+				if (this.query.sort !== '') {
+					query.push('sort=' + this.query.sort)
 				}
-				if (this.query.sort.field === '') {
-					sort += 'metadata.modified'
-				} else {
-					sort += this.query.sort.field
+
+				if (this.query.q === '' && this.query.sort === '') {
+					query.push('sort=-metadata.modified')
 				}
-				query.push('sort=' + sort)
 
 				return query.join('&')
 			},
@@ -371,11 +345,8 @@
 				if (this.query.tag.length > 0) {
 					query.tag = this.query.tag.slice()
 				}
-				if (this.query.sort.field !== '') {
-					query.sort = this.query.sort.field
-				}
-				if (this.query.sort.order !== '') {
-					query.order = this.query.sort.order
+				if (this.query.sort !== '') {
+					query.sort = this.query.sort
 				}
 				return query
 			},
