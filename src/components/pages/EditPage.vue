@@ -145,12 +145,12 @@
 		},
 		mounted () {
 			this.editor = ace.edit(this.$refs['editor'])
-			this.editor.setTheme('ace/theme/textmate')
+			this.editor.setTheme('ace/theme/dawn')
 			this.editor.getSession().setMode('ace/mode/markdown')
 			this.editor.getSession().setUseWrapMode(true)
 
 			this.editor.setOptions({
-				fontSize: '11pt',
+				fontSize: '14px',
 				scrollPastEnd: true
 			})
 
