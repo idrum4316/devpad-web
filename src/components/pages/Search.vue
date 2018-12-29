@@ -132,10 +132,10 @@
 											<div class="select is-fullwidth">
 												<select v-model="query.sort" @change="query.page = 1; refresh()">
 													<option value="">--</option>
-													<option value="metadata.modified">Modified Date Ascending</option>
-													<option value="-metadata.modified">Modified Date Descending</option>
-													<option value="metadata.title">Title Ascending</option>
-													<option value="-metadata.title">Title Descending</option>
+													<option value="metadata.modified">Modification Date (Oldest)</option>
+													<option value="-metadata.modified">Modification Date (Newest)</option>
+													<option value="metadata.title">Title (Ascending)</option>
+													<option value="-metadata.title">Title (Descending)</option>
 												</select>
 											</div>
 										</div>
