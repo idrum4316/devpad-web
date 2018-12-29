@@ -80,7 +80,7 @@
 										</div>
 
 										<!-- Tags -->
-										<div style="margin-top: 0.5rem;">
+										<div style="margin-top: 0.5rem;" v-if="hit.fields['metadata.tags']">
 											<font-awesome-icon :icon="['fa', 'tags']" fixed-width />
 											<span v-if="Array.isArray(hit.fields['metadata.tags'])">
 												<router-link
