@@ -216,25 +216,34 @@
 			}
 		},
 		computed: {
+
+			// Is there a previous page of results?
 			hasPrevPage () {
 				if (this.query.page > 1) {
 					return true
 				}
 				return false
 			},
+
+			// Is there a next page of results?
 			hasNextPage () {
 				if ((this.query.page * 10) < this.totalHits) {
 					return true
 				}
 				return false
 			},
+
+			// What is the index of the first result on this page?
 			startsAt () {
 				return ((this.query.page - 1) * 10) + 1
 			},
+
+			// What is the index of the last result on this page?
 			endsAt () {
 				let ends = ((this.query.page - 1) * 10) + 10
 				return ends > this.totalHits ? this.totalHits : ends
 			}
+
 		},
 		watch: {
 			$route () {
@@ -255,9 +264,13 @@
 			}
 		},
 		methods: {
+
 			formatDate (value) {
 				return this.$moment(value).format('MMMM Do YYYY, h:mm a')
 			},
+
+			// Parse the values out of the query string, and assign them to
+			// the VM data values.
 			parseQuery () {
 				var vm = this
 
@@ -282,6 +295,7 @@
 
 				window.document.title = 'Search: ' + this.query.q
 			},
+
 			// Fetch the page contents from the api
 			fetchData () {
 				var vm = this
@@ -313,6 +327,8 @@
 
 			}, // end fetchData
 
+			// Convert the VM data query value to a URL to send to the API
+			// endpoint to fetch results.
 			queryToURL () {
 				var query = []
 
@@ -342,6 +358,8 @@
 				return query.join('&')
 			},
 
+			// Convert the current VM data query to a set of URL parameters to
+			// be passed to the router to reload the page.
 			effectiveQuery () {
 				var query = {}
 				if (this.query.q !== '') {
@@ -362,18 +380,23 @@
 				return query
 			},
 
+			// Go to the next page of results
 			nextPage () {
 				if (this.hasNextPage === true) {
 					this.query.page++
 					this.refresh()
 				}
 			},
+
+			// Go to the previous page of results
 			prevPage () {
 				if (this.hasPrevPage === true) {
 					this.query.page--
 					this.refresh()
 				}
 			},
+
+			// Refresh the search page.
 			refresh () {
 				this.$router.push({ name: 'Search', query: this.effectiveQuery() })
 			}
