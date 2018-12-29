@@ -1,5 +1,6 @@
 <template>
 	<section class="section">
+
 		<div class="container is-fluid">
 
 			<div v-if="loading">
@@ -49,7 +50,7 @@
 
 											<div class="dropdown-menu" id="page-controls-menu" role="menu">
 												<div class="dropdown-content">
-													<a class="dropdown-item">
+													<a class="dropdown-item" @click="openMovePageModal">
 														Move
 													</a>
 													<a class="dropdown-item" @click="deletePage">
@@ -111,6 +112,39 @@
 			</div>
 
 		</div>
+
+		<!-- Move Page Modal -->
+		<div class="modal" ref="movePageModal">
+			<div class="modal-background" @click="closeMovePageModal"></div>
+			<div class="modal-content">
+				<div class="card">
+					<div class="card-header">
+						<div class="card-header-title">
+							<font-awesome-icon :icon="['fa', 'plus']" fixed-width />
+							&nbsp;
+							Move Page
+						</div>
+					</div>
+					<div class="card-content">
+						<form @submit.prevent="renamePage">
+							<div class="field">
+								<div class="control">
+									<input class="input" type="text" placeholder="New Slug" v-model="movePageSlug" ref="movePageSlugInput">
+								</div>
+							</div>
+
+							<div class="field is-grouped">
+								<div class="control">
+									<button class="button is-link">Move Page</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<button class="modal-close is-large" aria-label="close" @click="closeMovePageModal"></button>
+		</div>
+
 	</section>
 </template>
 
@@ -131,7 +165,8 @@
 					modified: undefined
 				},
 				notFound: undefined,
-				loading: true
+				loading: true,
+				movePageSlug: ''
 			}
 		},
 		computed: {
@@ -179,6 +214,18 @@
 			}
 		},
 		methods: {
+
+			closeMovePageModal () {
+				this.$refs.movePageModal.classList.remove('is-active')
+			},
+
+			openMovePageModal () {
+				this.newPageSlug = ''
+				this.$refs.movePageModal.classList.add('is-active')
+				vm.$refs.pageControls.classList.remove('is-active')
+				this.$refs.movePageSlugInput.focus()
+			},
+
 			// Fetch the page contents from the api
 			fetchData () {
 				var vm = this
@@ -214,10 +261,12 @@
 						}
 					}
 				})
-			}, // end fetchData
+			},
+
 			editPage () {
 				this.$router.push({ path: `/pages/${this.slug}/edit` })
-			}, // end editPage
+			},
+
 			deletePage () {
 				if (confirm('Are you sure you want to permanently delete this page?') === false) {
 					return
@@ -240,7 +289,30 @@
 						}
 					}
 				})
-			} // end deletePage
+			},
+
+			renamePage () {
+				var vm = this
+
+				this.$axios.get('/api/pages/' + this.slug + '/rename?id=' + vm.movePageSlug, {
+					headers: {'jwt': localStorage.getItem('jwt')}
+				})
+				.then(function (response) {
+					if (response.status === 200) {
+						vm.$router.push({ name: 'ViewPage', params: { slug: vm.movePageSlug } })
+						vm.closeMovePageModal()
+						vm.$refs.pageControls.classList.remove('is-active')
+					}
+				})
+				.catch(function (error) {
+					console.log(error.message)
+					if (error.response) {
+						if (error.response.status === 401) {
+							vm.$bus.$emit('logout')
+						}
+					}
+				})
+			}
 		}
 	}
 </script>
