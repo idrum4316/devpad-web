@@ -96,6 +96,18 @@
 .pr-2 {
 	padding-right: 1rem !important;
 }
+.pb-6 {
+	padding-bottom: 3rem !important;
+}
+.pt-6 {
+	padding-top: 3rem !important;
+}
+.pl-6 {
+	padding-left: 3rem !important;
+}
+.pr-6 {
+	padding-right: 3rem !important;
+}
 
 /* Container Styles */
 .container .is-devpad-content {

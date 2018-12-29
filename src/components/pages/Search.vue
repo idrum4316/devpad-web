@@ -42,14 +42,14 @@
 							<div class="container is-fluid is-devpad-content">
 
 								<!-- No Results Warning -->
-								<article class="notification is-warning" v-if="totalHits === 0">
-									<div class="subtitle">
+								<article class="notification has-text-warning pt-6 pb-6 has-text-centered" v-if="totalHits === 0">
+									<div class="title">
 										<font-awesome-icon :icon="['fa', 'exclamation-triangle']" />
 										No Results Found!
 									</div>
-									<p>
-										Modify your search and try again
-									</p>
+									<div class="subtitle">
+										Try modifying your search parameters.
+									</div>
 								</article>
 
 								<!-- Search Hits -->

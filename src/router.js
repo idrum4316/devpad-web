@@ -13,9 +13,11 @@ let router = new Router ({
                 {
                     path: '/',
                     name: 'Home',
-                    component: () => import('@/components/pages/Home'),
-                    meta: {
-                        requires_auth: true
+                    redirect: {
+                        name: 'ViewPage',
+                        params: {
+                            slug: 'index'
+                        }
                     }
                 },
                 {

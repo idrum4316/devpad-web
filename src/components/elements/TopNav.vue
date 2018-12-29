@@ -49,19 +49,19 @@
 						Tags
 					</router-link>
 
-					<!-- New Page Modal -->
-					<a class="navbar-item" @click="openNewPageModal">
-						<font-awesome-icon :icon="['fa', 'plus']" fixed-width />
-						&nbsp;
-						New
-					</a>
-
 					<!-- Settings -->
 					<router-link class="navbar-item" :to="{ name: 'Settings' }">
 						<font-awesome-icon :icon="['fa', 'cogs']" fixed-width />
 						&nbsp;
 						Settings
 					</router-link>
+
+					<!-- New Page Modal -->
+					<a class="navbar-item" @click="openNewPageModal">
+						<font-awesome-icon :icon="['fa', 'plus']" fixed-width />
+						&nbsp;
+						New
+					</a>
 
 					<!-- Logout -->
 					<a class="navbar-item" @click="logout">
