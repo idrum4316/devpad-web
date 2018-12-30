@@ -22,7 +22,7 @@
 						<span class="icon">
 							<font-awesome-icon :icon="['fa', 'edit']" />
 						</span>
-						<span>Edit</span>
+						<span>Editor</span>
 					</button>
 					<button class="button is-small is-primary is-outlined mr-1" @click="view = 'preview'; getPreview();" v-show="view === 'edit'">
 						<span class="icon">
@@ -30,7 +30,7 @@
 						</span>
 						<span>Preview</span>
 					</button>
-					<button class="button is-small is-warning is-outlined mr-1" @click="cancelEdit">
+					<button class="button is-small is-danger is-outlined mr-1" @click="cancelEdit">
 						<span class="icon">
 							<font-awesome-icon :icon="['fa', 'ban']" />
 						</span>
@@ -328,7 +328,7 @@
 	}
 	.editor-container {
 		overflow-y: auto;
-		height: calc(100vh - 101px);
+		height: calc(100vh - 111px);
 		border-right: 1px solid #dbdbdb;
 	}
 </style>
