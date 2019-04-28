@@ -14,6 +14,6 @@
 </script>
 
 <style>
-	@import './assets/css/theme.min.css';
+	@import './assets/css/bulma.min.css';
 	@import './assets/css/styles.css';
 </style>

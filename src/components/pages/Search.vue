@@ -56,7 +56,7 @@
 								<div style="margin-bottom: 2.5rem;" v-for="hit in hits" :key="hit.id">
 										
 									<!-- Page Title -->
-									<router-link class="subtitle is-5 has-text-primary" :to="{ name: 'ViewPage', params: { slug: hit.id }}">
+									<router-link class="subtitle is-5 has-text-link" :to="{ name: 'ViewPage', params: { slug: hit.id }}">
 										{{ hit.fields['metadata.title'] || hit.id }}
 									</router-link>
 
@@ -87,14 +87,14 @@
 													v-for="tag in hit.fields['metadata.tags']"
 													:key="tag"
 													:to="{ name: 'Search', query: { tag: tag }}">
-													<span class="tag is-link" style="margin-left: .5rem;">{{ tag }}</span>
+													<span class="tag is-primary" style="margin-left: .5rem;">{{ tag }}</span>
 												</router-link>
 											</span>
 											<span v-else>
 												<router-link
 													v-if="hit.fields['metadata.tags']"
 													:to="{ name: 'Search', query: { tag: hit.fields['metadata.tags'] }}">
-													<span class="tag is-link" style="margin-left: .5rem;">{{ hit.fields['metadata.tags'] }}</span>
+													<span class="tag is-primary" style="margin-left: .5rem;">{{ hit.fields['metadata.tags'] }}</span>
 												</router-link>
 											</span>
 										</div>

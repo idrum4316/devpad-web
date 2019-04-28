@@ -1,5 +1,5 @@
 <template>
-	<nav class="navbar is-dark">
+	<nav class="navbar is-link">
 		<div class="container is-fluid">
 			<div class="navbar-brand">
 				<router-link :to="{ name: 'Home' }" class="navbar-item">
@@ -17,7 +17,7 @@
 					<form @submit.prevent="executeSearch" class="navbar-item">
 						<div class="field">
 							<div class="control has-icons-left">
-								<input class="input is-rounded" type="text" placeholder="Search" v-model="searchInput" ref="search">
+								<input class="input" type="text" placeholder="Search" v-model="searchInput" ref="search">
 								<span class="icon is-small is-left">
 									<font-awesome-icon :icon="['fa', 'search']" />
 								</span>

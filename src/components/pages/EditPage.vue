@@ -89,7 +89,7 @@
 							<div class="field is-grouped is-grouped-multiline">
 								<div class="control" v-for="tag in tagList" :key="tag">
 									<div class="tags has-addons">
-										<span class="tag is-link">{{ tag }}</span>
+										<span class="tag is-primary">{{ tag }}</span>
 										<a class="tag is-delete" @click="removeTag(tag)"></a>
 									</div>
 								</div>
@@ -328,7 +328,7 @@
 	}
 	.editor-container {
 		overflow-y: auto;
-		height: calc(100vh - 111px);
+		height: calc(100vh - 97px);
 		border-right: 1px solid #dbdbdb;
 	}
 </style>

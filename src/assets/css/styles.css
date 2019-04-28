@@ -17,6 +17,10 @@
 	list-style: none;
 }
 
+.is-inverted {
+	filter: invert(100%) !important;
+}
+
 /*
 	Margin utility classes
 */
@@ -119,5 +123,5 @@
 	margin: auto;
 }
 .is-devpad-sidebar {
-	width: 250px;
+	width: 300px;
 }

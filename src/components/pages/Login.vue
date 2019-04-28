@@ -4,6 +4,8 @@
             <div class="container has-text-centered">
                 <div class="column is-4 is-offset-4">
                     <div class="box">
+                        <img class="is-inverted mb-1" src="/devpad-logo-text.png" alt="Devpad Logo" width="150">
+
                         <div class="notification is-danger" v-if="error">
                             <font-awesome-icon :icon="['fa', 'exclamation-triangle']" />
                             Login failed.
