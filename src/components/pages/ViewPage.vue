@@ -88,7 +88,7 @@
 							<hr>
 
 							<!-- Page Content -->
-							<div class="content" v-html="pageWithTOC.page"></div>
+							<div class="content" v-html="pageWithTOC.page" v-on:click="test_click"></div>
 
 						</div>
 
@@ -171,19 +171,19 @@
 		},
 		computed: {
 			formattedDate () {
-				return this.$moment(this.page.modified).format('MMMM Do YYYY, h:mm a');
+				return this.$moment(this.page.modified).format('MMMM Do YYYY, h:mm a')
 			},
 			pageWithTOC () {
-				var toc = []
-				var minDepth = 6
+				let toc = []
+				let minDepth = 6
 
 				// Get a list of all headings
-				var parser = new DOMParser();
-				var doc = parser.parseFromString(this.page.content, "text/html");
+				let parser = new DOMParser()
+				let doc = parser.parseFromString(this.page.content, "text/html")
 
-				var headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6')
+				let headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6')
 
-				for (var i = 0; i < headings.length; ++i) {
+				for (let i = 0; i < headings.length; ++i) {
 					toc[i] = {
 						title: headings[i].innerText,
 						depth: parseInt(headings[i].nodeName.charAt(1)),
@@ -196,7 +196,7 @@
 				}
 
 				if (minDepth > 1) {
-					for (var i = 0; i < toc.length; ++i) {
+					for (let i = 0; i < toc.length; ++i) {
 						toc[i].depth = toc[i].depth - (minDepth - 1)
 					}
 				}
@@ -215,6 +215,23 @@
 		},
 		methods: {
 
+			// Catch relative links and call router instead of reloading page
+			test_click (event) {
+				let vm = this
+
+				// If it's not a link, we don't care
+				if (event.target.tagName !== 'A') {
+					return
+				}
+
+				// Regex to detect relative links
+				let rel_link_regex = new RegExp('^(?:[a-z]+:)?//', 'i')
+				if (rel_link_regex.test(event.target.getAttribute('href')) === false) {
+					event.preventDefault()
+					vm.$router.push({ path: event.target.getAttribute('href') })
+				}
+			},
+
 			closeMovePageModal () {
 				this.$refs.movePageModal.classList.remove('is-active')
 			},
@@ -222,13 +239,13 @@
 			openMovePageModal () {
 				this.newPageSlug = ''
 				this.$refs.movePageModal.classList.add('is-active')
-				vm.$refs.pageControls.classList.remove('is-active')
+				this.$refs.pageControls.classList.remove('is-active')
 				this.$refs.movePageSlugInput.focus()
 			},
 
 			// Fetch the page contents from the api
 			fetchData () {
-				var vm = this
+				let vm = this
 				vm.loading = true
 				vm.notFound = undefined
 				vm.pageContent = ''
@@ -268,10 +285,11 @@
 			},
 
 			deletePage () {
+				this.$refs.pageControls.classList.remove('is-active')
 				if (confirm('Are you sure you want to permanently delete this page?') === false) {
 					return
 				}
-				var vm = this
+				let vm = this
 
 				this.$axios.delete('/api/pages/' + this.slug, {
 					headers: {'jwt': localStorage.getItem('jwt')}
@@ -292,7 +310,7 @@
 			},
 
 			renamePage () {
-				var vm = this
+				let vm = this
 
 				this.$axios.get('/api/pages/' + this.slug + '/rename?id=' + vm.movePageSlug, {
 					headers: {'jwt': localStorage.getItem('jwt')}
