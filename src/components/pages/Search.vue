@@ -147,12 +147,14 @@
 							<!-- Tag Filter -->
 							<nav class="panel is-devpad-sidebar" v-if="facets.tags">
 								<p class="panel-heading">
-									Tag
+									Tags
 								</p>
-								<div class="panel-block" v-for="tag in facets.tags.terms" :key="tag.term">
+
+								<label class="panel-block" v-for="tag in facets.tags.terms" :key="tag.term">
 									<input type="checkbox" :value="tag.term" v-model="query.tag" @change="query.page = 1; refresh()">
-									{{ tag.term }} - {{ tag.count }}
-								</div>
+									<span class="has-flex-grow">{{ tag.term }}</span>
+									<span class="tag is-light ml-1 is-pulled-right">{{ tag.count }}</span>
+								</label>
 
 								<div class="panel-block" v-if="query.tag.length > 0">
 									<button class="button is-link is-outlined is-fullwidth" @click="query.tag = []; refresh()">

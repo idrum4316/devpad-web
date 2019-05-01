@@ -21,6 +21,10 @@
 	filter: invert(100%) !important;
 }
 
+.has-flex-grow {
+	flex-grow: 1;
+}
+
 /*
 	Margin utility classes
 */
