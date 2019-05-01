@@ -155,7 +155,7 @@
 								</div>
 
 								<div class="panel-block" v-if="query.tag.length > 0">
-									<button class="button is-primary is-outlined is-fullwidth" @click="query.tag = []; refresh()">
+									<button class="button is-link is-outlined is-fullwidth" @click="query.tag = []; refresh()">
 										clear
 									</button>
 								</div>
