@@ -124,6 +124,7 @@
 		methods: {
 			executeSearch () {
 				this.$router.push({ name: 'Search', query: { q: this.searchInput }})
+				this.searchInput = ''
 			},
 			toggleMenu () {
 				this.$refs.menu.classList.toggle('is-active')
